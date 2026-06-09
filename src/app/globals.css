@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink-950 text-cream-100 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-brand text-cream-100;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display uppercase tracking-tightish;
+  }
+}
+
+@layer components {
+  /* Centered page container */
+  .container-x {
+    @apply mx-auto w-full max-w-container px-6 md:px-8;
+  }
+
+  /* Thin red rule used under eyebrows / section labels */
+  .accent-rule {
+    @apply inline-block h-[2px] w-10 bg-brand align-middle;
+  }
+
+  /* Minimal professional card — per brand brief */
+  .card-surface {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    @apply rounded-lg backdrop-blur-[1px] transition-colors duration-300;
+  }
+
+  .card-surface:hover {
+    border-color: rgba(214, 40, 40, 0.4);
+  }
+
+  /* Section vertical rhythm */
+  .section {
+    @apply py-20 md:py-28;
+  }
+}
+
+/* Reveal-on-scroll utility (driven by Reveal component) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
