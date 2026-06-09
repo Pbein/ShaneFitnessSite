@@ -24,10 +24,10 @@ export default function AboutPage() {
             <Reveal>
               <p className="mb-4 flex items-center gap-3 font-display text-sm uppercase tracking-wider2 text-brand">
                 <span className="accent-rule" />
-                About Shane
+                About
               </p>
               <h1 className="text-4xl leading-[1] text-cream-100 md:text-5xl lg:text-6xl">
-                An educator coach, not a drill sergeant.
+                About Me
               </h1>
             </Reveal>
             <Reveal delay={120}>
@@ -57,11 +57,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ---------------- Story ---------------- */}
+      {/* ---------------- Story (continuation of About Me) ---------------- */}
       <section className="section">
         <div className="container-x">
-          <SectionHeading eyebrow="My Story" title="A non-linear journey to a simple idea" />
-          <div className="mt-10 grid gap-8 md:grid-cols-2 lg:gap-12">
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
             {rest.map((p, i) => (
               <Reveal key={i} delay={i * 70}>
                 <p className="text-base leading-relaxed text-cream-300 md:text-lg">{p}</p>
@@ -74,10 +73,7 @@ export default function AboutPage() {
       {/* ---------------- Credentials ---------------- */}
       <section className="section bg-ink-900">
         <div className="container-x">
-          <SectionHeading
-            eyebrow="Credentials"
-            title="The foundation behind the coaching"
-          />
+          <SectionHeading eyebrow="Credentials" title="Education & Experience" />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {credentials.map((c, i) => (
               <Reveal key={c.title} delay={i * 80}>
@@ -91,7 +87,7 @@ export default function AboutPage() {
       {/* ---------------- My goal for you ---------------- */}
       <section className="section">
         <div className="container-x grid items-start gap-12 lg:grid-cols-[1fr_1.2fr]">
-          <SectionHeading eyebrow="My Philosophy" title={aboutPage.goalHeading} />
+          <SectionHeading eyebrow="My Philosophy" title={aboutPage.goalHeading} align="left" />
           <div className="space-y-5">
             {aboutPage.goal.map((p, i) => (
               <Reveal key={i} delay={i * 80}>
@@ -107,8 +103,8 @@ export default function AboutPage() {
         <div className="container-x">
           <SectionHeading
             eyebrow="Beyond Coaching"
-            title="Health is more than appearance"
-            intro="The interests that keep me growing — and remind me that resilience, enjoyment, and confidence matter as much as any number on a scale."
+            title="Health is about much more than appearance"
+            intro="Outside of coaching, these are the passions that keep me growing — and they've reinforced my belief that health is about resilience, enjoyment, confidence, physical capability, and a lifestyle that supports the life you want to live."
           />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {interests.map((interest, i) => (
