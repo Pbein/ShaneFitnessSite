@@ -187,7 +187,7 @@ export interface AboutPage {
 
 export const aboutPage: AboutPage = {
   heading: "About Shane",
-  portrait: "/images/about-portrait-inclusive.png",
+  portrait: "/images/about-portrait-square.png",
   story: [
     "I'm a NASM Certified Personal Trainer with a Master of Science in Health Promotion Management from American University. My background combines evidence-based health education, behavior-change research, and hands-on coaching experience working with a wide range of individuals — including beginners, busy professionals, recreational athletes, and those looking to improve their overall health and quality of life.",
     "My passion for health and wellness began more than a decade ago through my own fitness journey. Over the years, I've spent countless hours learning through both formal education and personal trial and error, exploring different training methods, nutrition strategies, recovery techniques, and approaches to long-term health. That experience taught me that sustainable results rarely come from extremes. Instead, they come from building simple habits and systems that fit into everyday life.",

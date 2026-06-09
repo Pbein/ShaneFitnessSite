@@ -43,7 +43,7 @@ export default function AboutPage() {
 
           <Reveal delay={150}>
             <div className="card-surface overflow-hidden p-2">
-              <div className="relative aspect-[3/4] w-full overflow-hidden rounded">
+              <div className="relative aspect-square w-full overflow-hidden rounded">
                 <Image
                   src={aboutPage.portrait}
                   alt="Shane — NASM Certified Personal Trainer"
