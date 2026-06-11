@@ -34,3 +34,8 @@ next-env.d.ts
 # original Squarespace export — reference only, distilled into content-map.md
 /SquareSpaceDemo
 
+# private project handoff (commercial terms) — keep out of the code repo
+/PROJECT-HANDOFF.md
+
+
+.vercel
