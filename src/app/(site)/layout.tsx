@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Oswald, Inter } from "next/font/google";
 import "../globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -60,6 +61,7 @@ export default async function SiteLayout({
         <main className="flex-1">{children}</main>
         <SiteFooter settings={settings} />
       </CtaSettingsProvider>
+      <Analytics />
     </div>
   );
 }

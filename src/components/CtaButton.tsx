@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { track } from "@vercel/analytics";
 import type { Cta } from "@/content/site";
 import { resolveCtaHref, isExternal } from "@/lib/cta";
 import { useCtaSettings } from "./CtaSettingsProvider";
@@ -39,6 +40,9 @@ export function CtaButton({
   const href = resolveCtaHref(cta, settings);
   const external = isExternal(cta);
 
+  // Conversion signal: booking/payment clicks are the money events.
+  const onClick = () => track("cta_click", { type: cta.type, text: cta.text });
+
   const baseClasses =
     variant === "ghost"
       ? "group inline-flex items-center gap-2 font-display uppercase tracking-wider2 text-sm transition-colors"
@@ -59,6 +63,7 @@ export function CtaButton({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={onClick}
         className={`${baseClasses} ${variants[variant]} ${className}`}
       >
         {content}
@@ -67,7 +72,11 @@ export function CtaButton({
   }
 
   return (
-    <Link href={href} className={`${baseClasses} ${variants[variant]} ${className}`}>
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`${baseClasses} ${variants[variant]} ${className}`}
+    >
       {content}
     </Link>
   );
