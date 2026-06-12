@@ -3,7 +3,10 @@ import { getSiteSettings } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { ContactForm } from "@/components/ContactForm";
+import { SectionHeading } from "@/components/SectionHeading";
+import { CalendlyInline } from "@/components/CalendlyInline";
 import { MailIcon, InstagramIcon } from "@/components/Icons";
+import { isEmbeddableCalendly } from "@/lib/booking";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -19,6 +22,7 @@ export default async function ContactPage() {
   const instagram = siteSettings.socialLinks.find((s) => s.platform === "instagram");
 
   return (
+    <>
     <section className="section pt-32">
       <div className="container-x grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         {/* Left: intro + details */}
@@ -81,5 +85,21 @@ export default async function ContactPage() {
         </Reveal>
       </div>
     </section>
+
+      {isEmbeddableCalendly(siteSettings.bookingUrl) && (
+        <section className="section border-t border-white/10">
+          <div className="container-x">
+            <SectionHeading
+              eyebrow="Booking"
+              title="Or pick a time right now"
+              align="center"
+            />
+            <div className="mt-10">
+              <CalendlyInline url={siteSettings.bookingUrl} />
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }
