@@ -3,6 +3,7 @@ import { Oswald, Inter } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteSettings } from "@/lib/sanity/fetch";
+import { SITE_URL } from "@/lib/seo";
 import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -23,16 +24,28 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   if (!settings) return {};
+  const ogImage = { url: "/images/hero-dumbbell.jpg", width: 2500, height: 1667 };
   return {
+    metadataBase: new URL(SITE_URL),
     title: {
       default: settings.seo.title,
       template: `%s · ${settings.businessName}`,
     },
     description: settings.seo.description,
+    alternates: { canonical: "/" },
     openGraph: {
       title: settings.seo.title,
       description: settings.seo.description,
       type: "website",
+      url: SITE_URL,
+      siteName: settings.businessName,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.seo.title,
+      description: settings.seo.description,
+      images: [ogImage.url],
     },
     icons: {
       icon: settings.logo,
