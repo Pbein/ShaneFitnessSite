@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteSettings } from "@/content/site";
+import { getSiteSettings } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { ContactForm } from "@/components/ContactForm";
@@ -11,7 +11,11 @@ export const metadata: Metadata = {
     "Tell me how I can help. Send a quick message and I'll get back to you within one business day.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteSettings = await getSiteSettings();
+  if (!siteSettings) {
+    throw new Error("Missing siteSettings document in the CMS");
+  }
   const instagram = siteSettings.socialLinks.find((s) => s.platform === "instagram");
 
   return (
@@ -71,7 +75,7 @@ export default function ContactPage() {
               Fill out the form below to get started.
             </p>
             <div className="mt-8">
-              <ContactForm />
+              <ContactForm email={siteSettings.email} />
             </div>
           </div>
         </Reveal>

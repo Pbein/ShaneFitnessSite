@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { siteSettings } from "@/content/site";
 import { CtaButton } from "./CtaButton";
+
+type HeaderSettings = { logo: string; businessName: string };
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -16,7 +17,7 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ settings }: { settings: HeaderSettings }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -42,10 +43,10 @@ export function SiteHeader() {
       }`}
     >
       <div className="container-x flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" aria-label={siteSettings.businessName}>
+        <Link href="/" className="flex items-center gap-3" aria-label={settings.businessName}>
           <Image
-            src={siteSettings.logo}
-            alt={siteSettings.businessName}
+            src={settings.logo}
+            alt={settings.businessName}
             width={48}
             height={48}
             className="h-11 w-11 rounded-md object-contain"

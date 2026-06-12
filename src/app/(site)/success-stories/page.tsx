@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { testimonials } from "@/content/site";
+import { getTestimonials } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     "Real results from real people — sustainable strength, confidence, and habits that last.",
 };
 
-export default function SuccessStoriesPage() {
+export default async function SuccessStoriesPage() {
+  const testimonials = await getTestimonials();
+
   return (
     <>
       <section className="section border-b border-white/10 pt-32">

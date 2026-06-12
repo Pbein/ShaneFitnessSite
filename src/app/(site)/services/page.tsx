@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { services, siteSettings } from "@/content/site";
+import { getServices, getSiteSettings } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -11,7 +11,12 @@ export const metadata: Metadata = {
     "Coaching options with Train Shane: a free consultation, in-person 1-on-1 training in DC/MD/VA, and personalized virtual coaching for busy professionals.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [services, siteSettings] = await Promise.all([getServices(), getSiteSettings()]);
+  if (!siteSettings) {
+    throw new Error("Missing siteSettings document in the CMS");
+  }
+
   return (
     <>
       <section className="section border-b border-white/10 pt-32">

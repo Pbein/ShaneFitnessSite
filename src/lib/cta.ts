@@ -1,16 +1,25 @@
-import { siteSettings, type Cta } from "@/content/site";
+import type { Cta } from "@/content/site";
+
+/** The settings a CTA needs to resolve its destination (booking/payment URLs). */
+export type CtaSettings = {
+  bookingUrl: string;
+  primaryPaymentLink?: string;
+  paymentLinks: { label: string; url: string }[];
+};
 
 /**
- * Resolves a CMS-style CTA into an href. Booking/payment targets come from
- * site settings (or an explicit override on the CTA), so the owner can change
- * the destination without a code change.
+ * Resolves a CMS-style CTA into an href. Booking/payment targets come from site
+ * settings (or an explicit override on the CTA), so the owner can change the
+ * destination in the CMS without a code change or redeploy.
  */
-export function resolveCtaHref(cta: Cta): string {
+export function resolveCtaHref(cta: Cta, settings: CtaSettings): string {
   switch (cta.type) {
     case "booking":
-      return cta.target || siteSettings.bookingUrl;
+      return cta.target || settings.bookingUrl;
     case "payment":
-      return cta.target || siteSettings.primaryPaymentLink || siteSettings.paymentLinks[0]?.url || "#";
+      return (
+        cta.target || settings.primaryPaymentLink || settings.paymentLinks[0]?.url || "#"
+      );
     case "link":
     default:
       return cta.target || "#";

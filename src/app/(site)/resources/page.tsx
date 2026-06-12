@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { resources } from "@/content/site";
+import { getResources } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     "Practical, evidence-based guidance on training, nutrition, and mindset — written for real life.",
 };
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const resources = await getResources();
+
   return (
     <>
       <section className="section border-b border-white/10 pt-32">

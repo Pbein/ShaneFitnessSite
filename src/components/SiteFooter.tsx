@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { siteSettings } from "@/content/site";
+import type { SiteSettings } from "@/content/site";
 import { InstagramIcon, MailIcon } from "./Icons";
 
-export function SiteFooter() {
-  const instagram = siteSettings.socialLinks.find((s) => s.platform === "instagram");
+export function SiteFooter({ settings }: { settings: SiteSettings }) {
+  const instagram = settings.socialLinks.find((s) => s.platform === "instagram");
 
   return (
     <footer className="border-t border-white/10 bg-ink-900">
@@ -14,8 +14,8 @@ export function SiteFooter() {
           <div>
             <div className="flex items-center gap-3">
               <Image
-                src={siteSettings.logo}
-                alt={siteSettings.businessName}
+                src={settings.logo}
+                alt={settings.businessName}
                 width={56}
                 height={56}
                 className="h-14 w-14 rounded-md object-contain"
@@ -25,10 +25,10 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream-300">
-              {siteSettings.serviceArea}
+              {settings.serviceArea}
             </p>
             <p className="mt-4 font-display text-sm uppercase tracking-wider2 text-brand">
-              {siteSettings.tagline}
+              {settings.tagline}
             </p>
           </div>
 
@@ -56,11 +56,11 @@ export function SiteFooter() {
           <div>
             <h4 className="mb-4 text-sm tracking-wider2 text-cream-500">Get in touch</h4>
             <a
-              href={`mailto:${siteSettings.email}`}
+              href={`mailto:${settings.email}`}
               className="flex items-center gap-2 text-sm text-cream-300 transition-colors hover:text-brand"
             >
               <MailIcon className="h-4 w-4" />
-              {siteSettings.email}
+              {settings.email}
             </a>
             {instagram && (
               <a
@@ -79,7 +79,7 @@ export function SiteFooter() {
         <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-cream-500 md:flex-row md:items-center md:justify-between">
           <p>
             © {/* year set at build */}
-            {new Date().getFullYear()} {siteSettings.businessName}. All rights reserved.
+            {new Date().getFullYear()} {settings.businessName}. All rights reserved.
           </p>
           <p>NASM Certified Personal Trainer · M.S. Health Promotion Management</p>
         </div>

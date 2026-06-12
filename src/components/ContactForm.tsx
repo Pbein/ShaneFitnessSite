@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { siteSettings } from "@/content/site";
 import { ArrowIcon } from "./Icons";
 
 /**
@@ -9,7 +8,7 @@ import { ArrowIcon } from "./Icons";
  * no database). When the CMS/real backend is wired in, swap the submit handler
  * for a form action — the markup stays the same.
  */
-export function ContactForm() {
+export function ContactForm({ email }: { email: string }) {
   const [sent, setSent] = useState(false);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -24,7 +23,7 @@ export function ContactForm() {
     const body = encodeURIComponent(
       `Name: ${first} ${last}\nEmail: ${email}\n\n${message}`
     );
-    window.location.href = `mailto:${siteSettings.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
@@ -83,8 +82,8 @@ export function ContactForm() {
         <p className="text-sm text-cream-300">
           Your email app should have opened with your message ready to send. If not,
           email{" "}
-          <a href={`mailto:${siteSettings.email}`} className="text-brand underline">
-            {siteSettings.email}
+          <a href={`mailto:${email}`} className="text-brand underline">
+            {email}
           </a>{" "}
           directly.
         </p>

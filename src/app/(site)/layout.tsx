@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Oswald, Inter } from "next/font/google";
 import "../globals.css";
-import { siteSettings } from "@/content/site";
+import { getSiteSettings } from "@/lib/sanity/fetch";
+import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -18,32 +19,47 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: siteSettings.seo.title,
-    template: `%s · ${siteSettings.businessName}`,
-  },
-  description: siteSettings.seo.description,
-  openGraph: {
-    title: siteSettings.seo.title,
-    description: siteSettings.seo.description,
-    type: "website",
-  },
-  icons: {
-    icon: siteSettings.logo,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  if (!settings) return {};
+  return {
+    title: {
+      default: settings.seo.title,
+      template: `%s · ${settings.businessName}`,
+    },
+    description: settings.seo.description,
+    openGraph: {
+      title: settings.seo.title,
+      description: settings.seo.description,
+      type: "website",
+    },
+    icons: {
+      icon: settings.logo,
+    },
+  };
+}
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+  if (!settings) throw new Error("Missing siteSettings document in the CMS");
+
   return (
     <div className={`${oswald.variable} ${inter.variable} min-h-screen flex flex-col`}>
-      <SiteHeader />
-      <main className="flex-1">{children}</main>
-      <SiteFooter />
+      <CtaSettingsProvider
+        value={{
+          bookingUrl: settings.bookingUrl,
+          primaryPaymentLink: settings.primaryPaymentLink,
+          paymentLinks: settings.paymentLinks,
+        }}
+      >
+        <SiteHeader settings={{ logo: settings.logo, businessName: settings.businessName }} />
+        <main className="flex-1">{children}</main>
+        <SiteFooter settings={settings} />
+      </CtaSettingsProvider>
     </div>
   );
 }

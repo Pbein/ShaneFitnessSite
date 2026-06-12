@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import type { Cta } from "@/content/site";
 import { resolveCtaHref, isExternal } from "@/lib/cta";
+import { useCtaSettings } from "./CtaSettingsProvider";
 import { ArrowIcon } from "./Icons";
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -22,8 +25,9 @@ interface CtaButtonProps {
 
 /**
  * Renders a CMS-driven CTA. The destination is resolved from the CTA type
- * (booking / payment / link) against site settings, so a non-technical owner
- * can change where any button points without touching code.
+ * (booking / payment / link) against site settings (provided via context from
+ * the server layout), so a non-technical owner can change where any button
+ * points in the CMS without touching code.
  */
 export function CtaButton({
   cta,
@@ -31,7 +35,8 @@ export function CtaButton({
   className = "",
   withArrow = true,
 }: CtaButtonProps) {
-  const href = resolveCtaHref(cta);
+  const settings = useCtaSettings();
+  const href = resolveCtaHref(cta, settings);
   const external = isExternal(cta);
 
   const baseClasses =

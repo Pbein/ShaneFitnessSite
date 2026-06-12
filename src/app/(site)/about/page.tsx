@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { aboutPage, credentials, interests, siteSettings } from "@/content/site";
+import {
+  getAboutPage,
+  getCredentials,
+  getInterests,
+  getSiteSettings,
+} from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -12,7 +17,17 @@ export const metadata: Metadata = {
     "Meet Shane — NASM-certified personal trainer with an M.S. in Health Promotion Management. Evidence-based, sustainable coaching built around your life.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [aboutPage, credentials, interests, siteSettings] = await Promise.all([
+    getAboutPage(),
+    getCredentials(),
+    getInterests(),
+    getSiteSettings(),
+  ]);
+  if (!aboutPage || !siteSettings) {
+    throw new Error("Missing aboutPage/siteSettings documents in the CMS");
+  }
+
   const [intro, ...rest] = aboutPage.story;
 
   return (

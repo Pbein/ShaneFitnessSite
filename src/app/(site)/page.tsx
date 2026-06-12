@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Service } from "@/content/site";
 import {
-  homepage,
-  credentials,
-  services,
-  testimonials,
-  siteSettings,
-} from "@/content/site";
+  getHomepage,
+  getServices,
+  getCredentials,
+  getTestimonials,
+  getSiteSettings,
+} from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -15,10 +16,21 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CheckIcon } from "@/components/Icons";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [homepage, services, credentials, testimonials, siteSettings] = await Promise.all([
+    getHomepage(),
+    getServices(),
+    getCredentials(),
+    getTestimonials(),
+    getSiteSettings(),
+  ]);
+  if (!homepage || !siteSettings) {
+    throw new Error("Missing homepage/siteSettings documents in the CMS");
+  }
+
   const featured = homepage.featuredServiceSlugs
     .map((slug) => services.find((s) => s.slug === slug))
-    .filter(Boolean) as typeof services;
+    .filter(Boolean) as Service[];
 
   return (
     <>
