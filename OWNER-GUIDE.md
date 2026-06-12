@@ -18,54 +18,53 @@ This is on purpose: it keeps the site looking polished and consistent no matter 
 
 ---
 
-## Right now (the demo)
+## Where things stand
 
-The website you're looking at is a **working demo**. Everything you see — the layout, your About story, your three services and prices, the look and feel — is real and live on the internet.
+Your website is **live on the internet**, and so is your **editor** — the simple, browser-based area where you change content. Everything you see (your About story, your three services and prices, the look and feel) is real and editable by you.
 
-A few things are **placeholders** for now, and we'll switch them to the real thing together:
-- **"Book" buttons** point to a sample calendar (not your real one yet).
-- **"Pay / Start Coaching" buttons** point to a sample checkout (not your real Stripe yet).
-- **Success Stories** and **Resources** show sample examples until we add your real ones.
+A few links are still **placeholders** until we set up your accounts together in one short session:
+- **"Book" buttons** point to a sample calendar until we connect your real Calendly.
+- **"Pay / Start Coaching" buttons** point to a sample checkout until we connect your real Stripe.
+- **Success Stories** and **Resources** show samples until we add your real ones.
 
-**For now, to change any wording, price, or photo, just email or text me and I'll update it the same day.** Once we move to Phase 2 (below), you'll be able to do most of it yourself.
+Everything else — text, prices, photos — you can change yourself, right now, using the editor below.
 
 ---
 
-## Coming soon: your own editor (Phase 2)
-
-We'll add a simple, password-protected editing area you log into in your browser — like a friendly form, not code. Here's what that will look like:
+## Your editor
 
 ### Logging in
-- Go to **your-website.com/studio**
-- Sign in with the email/password I set up for you
-- You'll see a list: **Site Settings, Home, About, Services, Testimonials, Photos**
+- Go to **`shane-fitness-site.vercel.app/studio`** (this becomes **your-domain.com/studio** once your custom domain is connected).
+- Sign in with the **Google account** I invite you with (you'll get an email invitation — accept it once, and you're in).
+- You'll see a list in the sidebar: **Site Settings, Homepage, About Page, Services, Testimonials, Resources.**
 
 ### Editing text or a price
 1. Click the page or item you want (e.g. **Services → Virtual Coaching**).
 2. Click into the field — change the **price** from `$200` to whatever you want, or edit the description.
-3. Click **Publish** (top right). Your live site updates within a minute.
+3. Click **Publish** (bottom/right). Your live site updates within a minute.
 
 ### Swapping a photo
-1. Open the item (e.g. **About**).
+1. Open the item (e.g. **About Page**).
 2. Click the current image, choose **Upload**, pick the new photo from your computer.
 3. **Publish**. (Tip: use a clear, well-lit photo. The site automatically resizes it.)
 
 ### Changing your booking link
-1. Go to **Site Settings → Booking Link**.
+1. Go to **Site Settings → Booking URL**.
 2. Paste your Calendly (or Google) scheduling URL.
-3. **Publish**. Every "Book" button across the whole site now uses the new link — no developer needed.
+3. **Publish**. Every "Book" button across the whole site now uses the new link — no developer needed. (Once it's a real Calendly link, an inline "pick a time" scheduler also appears on the Contact page automatically.)
 
 ### Updating a payment link
-1. Go to **Site Settings → Payment Links** (or the specific service).
+1. Go to **Site Settings → Payment links** (or a specific Service's "Payment link override").
 2. Paste the Stripe Payment Link URL for that offering.
 3. **Publish**. The matching "Pay / Start Coaching" button now points there.
 
-> You can't accidentally break the design. The editor only lets you change the content inside each field — if a required field is empty or a link looks wrong, it'll warn you before publishing.
+> You can't accidentally break the design. The editor only lets you change the content inside each field — if a required field is empty or a link looks wrong, it'll warn you before you can publish. Long text areas (like your About story) only allow plain paragraphs, so the page always stays clean.
 
 ---
 
 ## Good habits
 - **Publish** is what makes a change go live. If you don't see your change on the site, you probably forgot to Publish.
+- Edits save as a **draft** as you type; nothing is public until you **Publish**.
 - Keep photos in focus and reasonably high-quality — the site does the resizing.
 - When in doubt, change one thing, Publish, and check the live site. Nothing is permanent — you can always edit again.
 
