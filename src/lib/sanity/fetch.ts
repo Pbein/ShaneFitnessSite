@@ -45,8 +45,10 @@ function cta(raw: { text?: string; type?: string; target?: string } | undefined,
   return { text: raw.text, type: raw.type as CtaType, target: raw.target };
 }
 
-// All reads are cached and revalidated on an interval; T6/webhooks can tighten this.
-const fetchOpts = { next: { revalidate: 60 } } as const;
+// All reads are cached, tagged "sanity", and revalidated on a 60s fallback interval.
+// A Sanity publish hits /api/revalidate, which calls revalidateTag("sanity") to
+// refresh every CMS-backed page immediately (no waiting for the 60s interval).
+const fetchOpts = { next: { revalidate: 60, tags: ["sanity"] } };
 
 /* ------------------------------------------------------------------ */
 /* Typed fetchers — each returns the same shape as the site.ts export  */
