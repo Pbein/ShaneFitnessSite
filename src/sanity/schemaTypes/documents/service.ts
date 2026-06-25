@@ -45,9 +45,30 @@ export const service = defineType({
     defineField({ name: "approach", title: "Approach", type: "text", rows: 3 }),
     defineField({ name: "featured", title: "Featured", type: "boolean", initialValue: false }),
     defineField({ name: "order", title: "Display order", type: "number", initialValue: 0 }),
+    defineField({
+      name: "status",
+      title: "Status",
+      type: "string",
+      description:
+        "Retired services stay in the CMS with all their copy preserved but stop showing on the site. Flip back to Active to bring an old offer back instead of rebuilding it.",
+      options: {
+        list: [
+          { title: "Active", value: "active" },
+          { title: "Retired", value: "retired" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "active",
+    }),
   ],
   orderings: [
     { title: "Display order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
-  preview: { select: { title: "name", subtitle: "price" } },
+  preview: {
+    select: { title: "name", subtitle: "price", status: "status" },
+    prepare: ({ title, subtitle, status }) => ({
+      title: status === "retired" ? `${title} (retired)` : title,
+      subtitle,
+    }),
+  },
 });

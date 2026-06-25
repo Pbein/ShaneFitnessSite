@@ -27,12 +27,15 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
   interests[]{ title, detail }
 }`;
 
-export const servicesQuery = groq`*[_type == "service"] | order(order asc){
+// Retired services (status == "retired") are excluded everywhere on the live site.
+// Services authored before the status field exist with status == null, which
+// `status != "retired"` correctly treats as active.
+export const servicesQuery = groq`*[_type == "service" && status != "retired"] | order(order asc){
   "slug": slug.current, name, shortDescription, price, priceNote, duration,
   ctaType, ctaText, paymentLink, included, whoFor, approach, featured
 }`;
 
-export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $slug][0]{
+export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $slug && status != "retired"][0]{
   "slug": slug.current, name, shortDescription, price, priceNote, duration,
   ctaType, ctaText, paymentLink, included, whoFor, approach, featured
 }`;
