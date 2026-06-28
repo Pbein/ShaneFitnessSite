@@ -65,8 +65,10 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     serviceArea: r.serviceArea,
     socialLinks: (r.socialLinks ?? []).map((s) => ({ platform: s.platform, url: s.url })),
     bookingUrl: r.bookingUrl,
+    onboardingBookingUrl: r.onboardingBookingUrl,
     primaryPaymentLink: r.primaryPaymentLink,
     paymentLinks: (r.paymentLinks ?? []).map((p) => ({ label: p.label, url: p.url })),
+    manageSubscriptionUrl: r.manageSubscriptionUrl,
     logo: imageUrl(r.logo),
     seo: { title: r.seo?.title ?? "", description: r.seo?.description ?? "" },
   };
@@ -173,8 +175,10 @@ type RawSiteSettings = {
   serviceArea: string;
   socialLinks?: { platform: string; url: string }[];
   bookingUrl: string;
+  onboardingBookingUrl?: string;
   primaryPaymentLink?: string;
   paymentLinks?: { label: string; url: string }[];
+  manageSubscriptionUrl?: string;
   logo?: SanityImageSource;
   seo?: { title?: string; description?: string };
 };

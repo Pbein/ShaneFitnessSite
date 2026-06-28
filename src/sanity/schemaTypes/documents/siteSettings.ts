@@ -50,6 +50,14 @@ export const siteSettings = defineType({
       validation: (r) => r.required().uri({ scheme: ["http", "https"] }),
     }),
     defineField({
+      name: "onboardingBookingUrl",
+      title: "First-session booking URL (post-payment)",
+      type: "url",
+      description:
+        "Calendly link to the 'first session' event type shown on the post-payment welcome page. Falls back to the main Booking URL if left blank.",
+      validation: (r) => r.uri({ scheme: ["http", "https"] }),
+    }),
+    defineField({
       name: "primaryPaymentLink",
       title: "Primary payment link (optional)",
       type: "url",
@@ -61,6 +69,14 @@ export const siteSettings = defineType({
       title: "Payment links",
       type: "array",
       of: [{ type: "paymentLink" }],
+    }),
+    defineField({
+      name: "manageSubscriptionUrl",
+      title: "Manage subscription URL (Stripe customer portal)",
+      type: "url",
+      description:
+        "Stripe Customer Portal login link (https://billing.stripe.com/p/login/...). Lets clients update or cancel their subscription with no account. Shown in the footer and on the welcome page when set.",
+      validation: (r) => r.uri({ scheme: ["http", "https"] }),
     }),
     defineField({
       name: "logo",

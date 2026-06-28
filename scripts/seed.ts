@@ -105,6 +105,7 @@ async function run() {
       url: s.url,
     })),
     bookingUrl: siteSettings.bookingUrl,
+    onboardingBookingUrl: siteSettings.onboardingBookingUrl,
     primaryPaymentLink: siteSettings.primaryPaymentLink,
     paymentLinks: siteSettings.paymentLinks.map((p, i) => ({
       _type: "paymentLink",
@@ -112,6 +113,7 @@ async function run() {
       label: p.label,
       url: p.url,
     })),
+    manageSubscriptionUrl: siteSettings.manageSubscriptionUrl,
     logo,
     seo: siteSettings.seo,
   });

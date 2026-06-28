@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { SiteSettings } from "@/content/site";
-import { InstagramIcon, MailIcon } from "./Icons";
+import { InstagramIcon, MailIcon, CreditCardIcon } from "./Icons";
 
 export function SiteFooter({ settings }: { settings: SiteSettings }) {
   const instagram = settings.socialLinks.find((s) => s.platform === "instagram");
@@ -71,6 +71,17 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
               >
                 <InstagramIcon className="h-4 w-4" />
                 Instagram
+              </a>
+            )}
+            {settings.manageSubscriptionUrl && (
+              <a
+                href={settings.manageSubscriptionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 flex items-center gap-2 text-sm text-cream-300 transition-colors hover:text-brand"
+              >
+                <CreditCardIcon className="h-4 w-4" />
+                Manage subscription
               </a>
             )}
           </div>

@@ -41,8 +41,12 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   /** Calendly / Google scheduling URL — STUB. */
   bookingUrl: string;
+  /** Calendly "first session" event type shown on the post-payment /welcome page. */
+  onboardingBookingUrl?: string;
   primaryPaymentLink?: string;
   paymentLinks: PaymentLink[];
+  /** Stripe Customer Portal login link — lets clients self-cancel without an account. */
+  manageSubscriptionUrl?: string;
   logo: string;
   seo: { title: string; description: string };
 }
@@ -58,11 +62,15 @@ export const siteSettings: SiteSettings = {
   ],
   // ⚠️ STUB booking link — swap for the real Calendly/Google scheduling URL in the CMS.
   bookingUrl: "https://calendly.com/",
+  // ⚠️ STUB — Calendly "first session" event type for the post-payment welcome page.
+  onboardingBookingUrl: "https://calendly.com/",
   paymentLinks: [
     // ⚠️ STUB Stripe Payment Links.
     { label: "In-Person Session", url: "https://buy.stripe.com/" },
     { label: "Virtual Coaching", url: "https://buy.stripe.com/" },
   ],
+  // ⚠️ STUB — Stripe Customer Portal login link (https://billing.stripe.com/p/login/...).
+  manageSubscriptionUrl: "https://billing.stripe.com/",
   logo: "/images/logo.webp",
   seo: {
     title: "Train Shane — Evidence-Based Personal Training",
