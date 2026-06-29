@@ -44,9 +44,10 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "bookingUrl",
-      title: "Booking URL (Calendly / scheduling)",
+      title: "Consultation / default booking URL",
       type: "url",
-      description: "Public booking link used by all 'booking' CTAs.",
+      description:
+        "Calendly link for the free-consultation 'Book a Consultation' CTAs across the site (home, services, contact). Also the fallback the welcome page uses for any paid tier whose own booking URL is left blank.",
       validation: (r) => r.required().uri({ scheme: ["http", "https"] }),
     }),
     defineField({
