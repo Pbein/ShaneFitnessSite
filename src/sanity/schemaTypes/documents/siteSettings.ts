@@ -50,19 +50,27 @@ export const siteSettings = defineType({
       validation: (r) => r.required().uri({ scheme: ["http", "https"] }),
     }),
     defineField({
-      name: "onboardingBookingUrl",
-      title: "First coaching-session booking URL (virtual / Meet)",
+      name: "essentialBookingUrl",
+      title: "Essential first-session booking URL (monthly / Meet)",
       type: "url",
       description:
-        "Calendly link to the virtual 'first coaching session' event type shown on the welcome page for Essential & Premium. Falls back to the main Booking URL if left blank.",
+        "Calendly link to the 'first session' event for Essential (e.g. the Monthly Meeting, Google Meet) shown on the welcome page after an Essential purchase. Falls back to the main Booking URL if blank.",
+      validation: (r) => r.uri({ scheme: ["http", "https"] }),
+    }),
+    defineField({
+      name: "premiumBookingUrl",
+      title: "Premium first-session booking URL (weekly / Meet)",
+      type: "url",
+      description:
+        "Calendly link to the 'first session' event for Premium (e.g. the Weekly One-on-One, Google Meet) shown on the welcome page after a Premium purchase. Falls back to the main Booking URL if blank.",
       validation: (r) => r.uri({ scheme: ["http", "https"] }),
     }),
     defineField({
       name: "inPersonBookingUrl",
-      title: "In-person session booking URL (physical location)",
+      title: "In-person session booking URL",
       type: "url",
       description:
-        "Calendly link to the in-person session event type (physical address, no video) shown on the welcome page for the In-Person plan. Falls back to the coaching link, then the main Booking URL.",
+        "Calendly link to the in-person session event shown on the welcome page after an In-Person purchase. Set that event's location to 'Ask invitee' so the client enters where they want to meet. Falls back to the main Booking URL if blank.",
       validation: (r) => r.uri({ scheme: ["http", "https"] }),
     }),
     defineField({

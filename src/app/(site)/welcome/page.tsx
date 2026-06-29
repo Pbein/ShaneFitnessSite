@@ -57,15 +57,15 @@ export default async function WelcomePage({
 
   const copy = (plan && PLAN_COPY[plan]) || DEFAULT_COPY;
 
-  // In-person books a physical session; the coaching tiers book a virtual (Meet)
-  // session. Each falls back to the coaching link, then the main booking link, so
-  // the page never breaks if a dedicated event type isn't set yet.
-  const bookingUrl =
-    (plan === "in-person"
-      ? siteSettings.inPersonBookingUrl
-      : siteSettings.onboardingBookingUrl) ||
-    siteSettings.onboardingBookingUrl ||
-    siteSettings.bookingUrl;
+  // Each plan books its own Calendly event type: Essential → monthly first session,
+  // Premium → weekly first session, In-Person → in-person (invitee picks location).
+  // Falls back to the main booking link so the page never breaks if one isn't set.
+  const planBookingUrl: Record<string, string | undefined> = {
+    essential: siteSettings.essentialBookingUrl,
+    premium: siteSettings.premiumBookingUrl,
+    "in-person": siteSettings.inPersonBookingUrl,
+  };
+  const bookingUrl = (plan && planBookingUrl[plan]) || siteSettings.bookingUrl;
   const canEmbed = isEmbeddableCalendly(bookingUrl);
 
   return (

@@ -105,7 +105,8 @@ async function run() {
       url: s.url,
     })),
     bookingUrl: siteSettings.bookingUrl,
-    onboardingBookingUrl: siteSettings.onboardingBookingUrl,
+    essentialBookingUrl: siteSettings.essentialBookingUrl,
+    premiumBookingUrl: siteSettings.premiumBookingUrl,
     inPersonBookingUrl: siteSettings.inPersonBookingUrl,
     primaryPaymentLink: siteSettings.primaryPaymentLink,
     paymentLinks: siteSettings.paymentLinks.map((p, i) => ({

@@ -41,9 +41,11 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   /** Calendly / Google scheduling URL — STUB. */
   bookingUrl: string;
-  /** Calendly "first coaching session" (virtual / Google Meet) shown on /welcome for the coaching tiers. */
-  onboardingBookingUrl?: string;
-  /** Calendly "in-person session" (physical location) shown on /welcome for the in-person plan. */
+  /** Calendly "first session" (monthly, Meet) booked on /welcome for the Essential tier. */
+  essentialBookingUrl?: string;
+  /** Calendly "first session" (weekly, Meet) booked on /welcome for the Premium tier. */
+  premiumBookingUrl?: string;
+  /** Calendly in-person session (invitee specifies location) booked on /welcome for In-Person. */
   inPersonBookingUrl?: string;
   primaryPaymentLink?: string;
   paymentLinks: PaymentLink[];
@@ -64,9 +66,9 @@ export const siteSettings: SiteSettings = {
   ],
   // ⚠️ STUB booking link — swap for the real Calendly/Google scheduling URL in the CMS.
   bookingUrl: "https://calendly.com/",
-  // ⚠️ STUB — Calendly "first coaching session" (virtual / Meet) for the welcome page.
-  onboardingBookingUrl: "https://calendly.com/",
-  // ⚠️ STUB — Calendly "in-person session" (physical location) for the welcome page.
+  // ⚠️ STUB — Calendly first-session events for the welcome page (per tier).
+  essentialBookingUrl: "https://calendly.com/",
+  premiumBookingUrl: "https://calendly.com/",
   inPersonBookingUrl: "https://calendly.com/",
   paymentLinks: [
     // ⚠️ STUB Stripe Payment Links.
