@@ -66,6 +66,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     socialLinks: (r.socialLinks ?? []).map((s) => ({ platform: s.platform, url: s.url })),
     bookingUrl: r.bookingUrl,
     onboardingBookingUrl: r.onboardingBookingUrl,
+    inPersonBookingUrl: r.inPersonBookingUrl,
     primaryPaymentLink: r.primaryPaymentLink,
     paymentLinks: (r.paymentLinks ?? []).map((p) => ({ label: p.label, url: p.url })),
     manageSubscriptionUrl: r.manageSubscriptionUrl,
@@ -176,6 +177,7 @@ type RawSiteSettings = {
   socialLinks?: { platform: string; url: string }[];
   bookingUrl: string;
   onboardingBookingUrl?: string;
+  inPersonBookingUrl?: string;
   primaryPaymentLink?: string;
   paymentLinks?: { label: string; url: string }[];
   manageSubscriptionUrl?: string;

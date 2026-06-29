@@ -41,8 +41,10 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   /** Calendly / Google scheduling URL — STUB. */
   bookingUrl: string;
-  /** Calendly "first session" event type shown on the post-payment /welcome page. */
+  /** Calendly "first coaching session" (virtual / Google Meet) shown on /welcome for the coaching tiers. */
   onboardingBookingUrl?: string;
+  /** Calendly "in-person session" (physical location) shown on /welcome for the in-person plan. */
+  inPersonBookingUrl?: string;
   primaryPaymentLink?: string;
   paymentLinks: PaymentLink[];
   /** Stripe Customer Portal login link — lets clients self-cancel without an account. */
@@ -62,8 +64,10 @@ export const siteSettings: SiteSettings = {
   ],
   // ⚠️ STUB booking link — swap for the real Calendly/Google scheduling URL in the CMS.
   bookingUrl: "https://calendly.com/",
-  // ⚠️ STUB — Calendly "first session" event type for the post-payment welcome page.
+  // ⚠️ STUB — Calendly "first coaching session" (virtual / Meet) for the welcome page.
   onboardingBookingUrl: "https://calendly.com/",
+  // ⚠️ STUB — Calendly "in-person session" (physical location) for the welcome page.
+  inPersonBookingUrl: "https://calendly.com/",
   paymentLinks: [
     // ⚠️ STUB Stripe Payment Links.
     { label: "In-Person Session", url: "https://buy.stripe.com/" },

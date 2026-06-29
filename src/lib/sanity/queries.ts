@@ -3,7 +3,7 @@ import { groq } from "next-sanity";
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   businessName, tagline, email, phone, serviceArea,
   socialLinks[]{ platform, url },
-  bookingUrl, onboardingBookingUrl, primaryPaymentLink,
+  bookingUrl, onboardingBookingUrl, inPersonBookingUrl, primaryPaymentLink,
   paymentLinks[]{ label, url },
   manageSubscriptionUrl,
   logo,

@@ -57,8 +57,15 @@ export default async function WelcomePage({
 
   const copy = (plan && PLAN_COPY[plan]) || DEFAULT_COPY;
 
-  // Prefer the dedicated "first session" link; fall back to the main booking link.
-  const bookingUrl = siteSettings.onboardingBookingUrl || siteSettings.bookingUrl;
+  // In-person books a physical session; the coaching tiers book a virtual (Meet)
+  // session. Each falls back to the coaching link, then the main booking link, so
+  // the page never breaks if a dedicated event type isn't set yet.
+  const bookingUrl =
+    (plan === "in-person"
+      ? siteSettings.inPersonBookingUrl
+      : siteSettings.onboardingBookingUrl) ||
+    siteSettings.onboardingBookingUrl ||
+    siteSettings.bookingUrl;
   const canEmbed = isEmbeddableCalendly(bookingUrl);
 
   return (

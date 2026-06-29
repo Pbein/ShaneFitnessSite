@@ -106,6 +106,7 @@ async function run() {
     })),
     bookingUrl: siteSettings.bookingUrl,
     onboardingBookingUrl: siteSettings.onboardingBookingUrl,
+    inPersonBookingUrl: siteSettings.inPersonBookingUrl,
     primaryPaymentLink: siteSettings.primaryPaymentLink,
     paymentLinks: siteSettings.paymentLinks.map((p, i) => ({
       _type: "paymentLink",

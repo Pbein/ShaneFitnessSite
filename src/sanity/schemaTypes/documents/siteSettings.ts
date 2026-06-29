@@ -51,10 +51,18 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "onboardingBookingUrl",
-      title: "First-session booking URL (post-payment)",
+      title: "First coaching-session booking URL (virtual / Meet)",
       type: "url",
       description:
-        "Calendly link to the 'first session' event type shown on the post-payment welcome page. Falls back to the main Booking URL if left blank.",
+        "Calendly link to the virtual 'first coaching session' event type shown on the welcome page for Essential & Premium. Falls back to the main Booking URL if left blank.",
+      validation: (r) => r.uri({ scheme: ["http", "https"] }),
+    }),
+    defineField({
+      name: "inPersonBookingUrl",
+      title: "In-person session booking URL (physical location)",
+      type: "url",
+      description:
+        "Calendly link to the in-person session event type (physical address, no video) shown on the welcome page for the In-Person plan. Falls back to the coaching link, then the main Booking URL.",
       validation: (r) => r.uri({ scheme: ["http", "https"] }),
     }),
     defineField({
