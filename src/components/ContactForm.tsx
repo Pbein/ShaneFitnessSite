@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { buildInquiryMailto } from "@/lib/contact";
 import { ArrowIcon } from "./Icons";
 
 /**
  * Demo contact form. For the visual demo it composes a mailto: link (no backend,
  * no database). When the CMS/real backend is wired in, swap the submit handler
  * for a form action — the markup stays the same.
+ *
+ * `email` is Shane's address (the recipient) and is the only value allowed to be
+ * the mailto: target. The visitor's own address is read into `visitorEmail` —
+ * deliberately not named `email`, so it cannot shadow the recipient again. The
+ * link is built by buildInquiryMailto (src/lib/contact.ts), which is unit-tested.
  */
 export function ContactForm({ email }: { email: string }) {
   const [sent, setSent] = useState(false);
@@ -14,16 +20,13 @@ export function ContactForm({ email }: { email: string }) {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const first = String(data.get("firstName") || "");
-    const last = String(data.get("lastName") || "");
-    const email = String(data.get("email") || "");
-    const message = String(data.get("message") || "");
 
-    const subject = encodeURIComponent(`New inquiry from ${first} ${last}`.trim());
-    const body = encodeURIComponent(
-      `Name: ${first} ${last}\nEmail: ${email}\n\n${message}`
-    );
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    window.location.href = buildInquiryMailto(email, {
+      firstName: String(data.get("firstName") || ""),
+      lastName: String(data.get("lastName") || ""),
+      visitorEmail: String(data.get("email") || ""),
+      message: String(data.get("message") || ""),
+    });
     setSent(true);
   }
 
