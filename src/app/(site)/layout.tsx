@@ -32,7 +32,9 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${settings.businessName}`,
     },
     description: settings.seo.description,
-    alternates: { canonical: "/" },
+    // No `alternates` here on purpose: metadata declared in a route-group layout
+    // is inherited by every child, so a canonical set here makes all five pages
+    // claim to be the homepage. Each page declares its own canonical instead.
     openGraph: {
       title: settings.seo.title,
       description: settings.seo.description,

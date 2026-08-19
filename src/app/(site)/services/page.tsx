@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Services",
   description:
     "Coaching options with Train Shane: a free consultation, in-person 1-on-1 training in DC/MD/VA, and personalized virtual coaching for busy professionals.",
+  alternates: { canonical: "/services" },
 };
 
 export default async function ServicesPage() {

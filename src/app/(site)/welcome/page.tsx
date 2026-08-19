@@ -11,6 +11,7 @@ import { CheckIcon } from "@/components/Icons";
 export const metadata: Metadata = {
   title: "Welcome",
   robots: { index: false, follow: false },
+  alternates: { canonical: "/welcome" },
 };
 
 export default async function WelcomePage({

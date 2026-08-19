@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Success Stories",
   description:
     "Real results from real people — sustainable strength, confidence, and habits that last.",
+  alternates: { canonical: "/success-stories" },
 };
 
 export default async function SuccessStoriesPage() {

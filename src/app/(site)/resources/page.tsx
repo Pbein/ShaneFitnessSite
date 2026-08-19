@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Resources",
   description:
     "Practical, evidence-based guidance on training, nutrition, and mindset — written for real life.",
+  alternates: { canonical: "/resources" },
 };
 
 export default async function ResourcesPage() {

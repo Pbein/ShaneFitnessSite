@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Meet Shane — NASM-certified personal trainer with an M.S. in Health Promotion Management. Evidence-based, sustainable coaching built around your life.",
+  alternates: { canonical: "/about" },
 };
 
 export default async function AboutPage() {

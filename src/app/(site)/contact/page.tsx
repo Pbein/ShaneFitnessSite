@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Tell me how I can help. Send a quick message and I'll get back to you within one business day.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage() {

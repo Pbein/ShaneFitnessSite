@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { Service } from "@/content/site";
@@ -15,6 +16,12 @@ import { CredentialCard } from "@/components/CredentialCard";
 import { ServiceCard } from "@/components/ServiceCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CheckIcon } from "@/components/Icons";
+
+// Title/description come from the CMS via the route-group layout; only the
+// canonical is page-specific.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const [homepage, services, credentials, testimonials, siteSettings] = await Promise.all([
