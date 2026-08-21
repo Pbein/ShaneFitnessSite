@@ -49,13 +49,6 @@ export default async function ResourcesPage() {
             </Reveal>
           ))}
         </div>
-
-        <div className="container-x mt-12">
-          <p className="rounded-md border border-dashed border-white/15 px-5 py-4 text-sm text-cream-500">
-            Placeholder articles for the demo. Real posts will be authored and published
-            through the CMS.
-          </p>
-        </div>
       </section>
 
       <section className="border-t border-white/10 bg-ink-900 py-20 md:py-28">

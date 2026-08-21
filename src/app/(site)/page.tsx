@@ -24,13 +24,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [homepage, services, credentials, testimonials, siteSettings] = await Promise.all([
-    getHomepage(),
-    getServices(),
-    getCredentials(),
-    getTestimonials(),
-    getSiteSettings(),
-  ]);
+  const [homepage, services, credentials, testimonials, siteSettings] =
+    await Promise.all([
+      getHomepage(),
+      getServices(),
+      getCredentials(),
+      getTestimonials(),
+      getSiteSettings(),
+    ]);
   if (!homepage || !siteSettings) {
     throw new Error("Missing homepage/siteSettings documents in the CMS");
   }
@@ -134,7 +135,11 @@ export default async function HomePage() {
           </div>
           <Reveal className="mt-10">
             <CtaButton
-              cta={{ text: "See full details", type: "link", target: "/services" }}
+              cta={{
+                text: "See full details",
+                type: "link",
+                target: "/services",
+              }}
               variant="ghost"
             />
           </Reveal>
@@ -154,7 +159,9 @@ export default async function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 to-transparent" />
               <p className="absolute bottom-6 left-6 right-6 font-display text-2xl uppercase leading-tight tracking-tightish text-cream-100">
-                Your plan starts<br />with a blank page.
+                Your plan starts
+                <br />
+                with a blank page.
               </p>
             </div>
           </Reveal>
@@ -166,13 +173,19 @@ export default async function HomePage() {
             <div className="mt-6 space-y-5">
               {homepage.philosophy.body.map((p, i) => (
                 <Reveal key={i} delay={i * 80}>
-                  <p className="text-base leading-relaxed text-cream-300 md:text-lg">{p}</p>
+                  <p className="text-base leading-relaxed text-cream-300 md:text-lg">
+                    {p}
+                  </p>
                 </Reveal>
               ))}
             </div>
             <Reveal className="mt-8" delay={200}>
               <CtaButton
-                cta={{ text: "More about Shane", type: "link", target: "/about" }}
+                cta={{
+                  text: "More about Shane",
+                  type: "link",
+                  target: "/about",
+                }}
                 variant="ghost"
               />
             </Reveal>
@@ -180,31 +193,37 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Testimonials ---------------- */}
-      <section className="section border-t border-white/10">
-        <div className="container-x">
-          <SectionHeading
-            eyebrow="Success Stories"
-            title="Real people. Lasting results."
-            align="center"
-          />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.map((t, i) => (
-              <Reveal key={i} delay={i * 90}>
-                <TestimonialCard testimonial={t} />
-              </Reveal>
-            ))}
+      {/* ---------------- Testimonials ----------------
+          Rendered only when there are real testimonials to show. With none
+          published, this band was a heading over an empty grid and a "Read more
+          stories" link to an empty page. Data-driven rather than commented out,
+          so the section returns by itself the moment Shane publishes a quote. */}
+      {testimonials.length > 0 && (
+        <section className="section border-t border-white/10">
+          <div className="container-x">
+            <SectionHeading
+              eyebrow="Success Stories"
+              title="Real people. Lasting results."
+              align="center"
+            />
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {testimonials.map((t, i) => (
+                <Reveal key={i} delay={i * 90}>
+                  <TestimonialCard testimonial={t} />
+                </Reveal>
+              ))}
+            </div>
+            <Reveal className="mt-10 text-center">
+              <Link
+                href="/success-stories"
+                className="font-display text-sm uppercase tracking-wider2 text-cream-300 transition-colors hover:text-brand"
+              >
+                Read more stories →
+              </Link>
+            </Reveal>
           </div>
-          <Reveal className="mt-10 text-center">
-            <Link
-              href="/success-stories"
-              className="font-display text-sm uppercase tracking-wider2 text-cream-300 transition-colors hover:text-brand"
-            >
-              Read more stories →
-            </Link>
-          </Reveal>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ---------------- Mission / CTA band ---------------- */}
       <section className="relative isolate overflow-hidden border-t border-white/10 py-24 md:py-32">
@@ -225,7 +244,9 @@ export default async function HomePage() {
               variant="primary"
             />
           </Reveal>
-          <p className="mt-6 text-sm text-cream-500">{siteSettings.serviceArea}</p>
+          <p className="mt-6 text-sm text-cream-500">
+            {siteSettings.serviceArea}
+          </p>
         </div>
       </section>
     </>

@@ -40,8 +40,8 @@ export default async function ServicesPage() {
         </div>
         <div className="container-x mt-10">
           <p className="text-sm text-cream-500">
-            Prices shown are current as of this demo. Payment is handled securely via Stripe;
-            booking links open your scheduling calendar.{" "}
+            Payment is handled securely via Stripe; booking links open your scheduling
+            calendar.{" "}
             <span className="text-cream-300">{siteSettings.serviceArea}</span>
           </p>
         </div>

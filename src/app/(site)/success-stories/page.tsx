@@ -35,14 +35,6 @@ export default async function SuccessStoriesPage() {
             </Reveal>
           ))}
         </div>
-
-        {/* Placeholder note for the demo */}
-        <div className="container-x mt-12">
-          <p className="rounded-md border border-dashed border-white/15 px-5 py-4 text-sm text-cream-500">
-            Sample stories shown for the demo. Real client testimonials will be added
-            and managed through the CMS.
-          </p>
-        </div>
       </section>
 
       <section className="border-t border-white/10 bg-ink-900 py-20 md:py-28">
