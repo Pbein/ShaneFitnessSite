@@ -60,20 +60,14 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover object-[72%_center] md:object-center"
           />
-          {/* The lit wall on the left averages ~140/255, and the headline is
-              near-white, so brightening the whole frame would leave the text
-              sitting at roughly 2.4:1 — unreadable. Instead the darkening is
-              spent where the words are and withdrawn everywhere else: held to
-              55% of the width (the headline ends around 64% on desktop), then
-              released so the rack, the plant and the TRAIN SHANE sign come
-              through at full strength. Narrow screens put text over the middle
-              of the room, so they keep a flat scrim as well — held to `lg` and
-              not `md`, because at exactly 768 the measured worst-pixel contrast
-              behind the headline dropped to 3.7:1, the weakest of any width.
-              45% is the floor, not a guess: at 32% the cream-300 subheadline
-              fell under 4.5:1 on every phone width. */}
-          <div className="absolute inset-0 bg-ink-950/45 lg:bg-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 from-0% via-ink-950/80 via-55% to-transparent to-92%" />
+          {/* This source is shot to the spec in docs/HERO-BRIEF.md: its copy zone
+              (left 62%) averages 20/255 against a budget of 68, so the heavy
+              scrim the previous image needed is gone entirely. What is left is a
+              light polish — enough to even out the ceiling spots near the top of
+              the copy zone, which peak around 184/255, without touching the rack
+              or the sign. Do not add opacity back without re-measuring; the
+              earlier version needed it only because its wall sat at 140/255. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ink-950/75 from-0% via-ink-950/30 via-55% to-transparent to-85%" />
           {/* The previous hero ended in a hard horizontal line where the section
               stopped, because the fade had gone transparent by halfway up.
               Carrying ink-950 further lands the bottom edge on the page's own
