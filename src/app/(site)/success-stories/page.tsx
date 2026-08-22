@@ -20,6 +20,7 @@ export default async function SuccessStoriesPage() {
       <section className="section border-b border-white/10 pt-32">
         <div className="container-x">
           <SectionHeading
+            as="h1"
             eyebrow="Success Stories"
             title="Results that last beyond the program"
             intro="The goal isn't a quick before-and-after. It's building habits and systems that keep working long after our coaching ends."

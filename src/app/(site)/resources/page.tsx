@@ -20,6 +20,7 @@ export default async function ResourcesPage() {
       <section className="section border-b border-white/10 pt-32">
         <div className="container-x">
           <SectionHeading
+            as="h1"
             eyebrow="Resources"
             title="Cut through the noise"
             intro="Short, practical reads on training, nutrition, and mindset — grounded in evidence, written for people with real lives and limited time."

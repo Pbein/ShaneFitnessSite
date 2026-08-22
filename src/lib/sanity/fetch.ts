@@ -127,16 +127,20 @@ export async function getInterests(): Promise<Interest[]> {
   return (r?.interests ?? []).map((i) => ({ title: i.title, detail: i.detail }));
 }
 
+/** Trim CMS free-text. Stray trailing spaces are easy to type and show up in
+ *  the layout as odd gaps (e.g. "$100 " next to its price note). */
+const t = (s?: string) => s?.trim();
+
 function toService(r: RawService): Service {
   return {
     slug: r.slug,
-    name: r.name,
-    shortDescription: r.shortDescription ?? "",
-    price: r.price ?? "",
-    priceNote: r.priceNote,
-    duration: r.duration,
+    name: t(r.name) ?? "",
+    shortDescription: t(r.shortDescription) ?? "",
+    price: t(r.price) ?? "",
+    priceNote: t(r.priceNote),
+    duration: t(r.duration),
     ctaType: (r.ctaType ?? "link") as CtaType,
-    ctaText: r.ctaText ?? "",
+    ctaText: t(r.ctaText) ?? "",
     paymentLink: r.paymentLink,
     included: r.included,
     whoFor: r.whoFor,

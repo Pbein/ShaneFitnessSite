@@ -6,6 +6,11 @@ interface SectionHeadingProps {
   intro?: string;
   align?: "left" | "center";
   className?: string;
+  /**
+   * Heading level. Sections are h2 (the default); pass "h1" when this heading
+   * is the page's own title, so every route has exactly one h1.
+   */
+  as?: "h1" | "h2";
 }
 
 export function SectionHeading({
@@ -14,6 +19,7 @@ export function SectionHeading({
   intro,
   align = "left",
   className = "",
+  as: Heading = "h2",
 }: SectionHeadingProps) {
   const isCenter = align === "center";
   return (
@@ -30,9 +36,9 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2 className="text-3xl leading-[1.05] text-cream-100 md:text-4xl lg:text-5xl">
+      <Heading className="text-3xl leading-[1.05] text-cream-100 md:text-4xl lg:text-5xl">
         {title}
-      </h2>
+      </Heading>
       {intro && (
         <p className="mt-5 text-base leading-relaxed text-cream-300 md:text-lg">
           {intro}

@@ -8,20 +8,36 @@ interface ServiceCardProps {
   variant?: "compact" | "full";
 }
 
+/**
+ * "Most Popular" is a badge, not part of the product name — but it was typed
+ * into the CMS name field as a parenthetical. Strip it on the way out so the
+ * card doesn't say it twice, and so the heading stays one line on desktop.
+ */
+function displayName(name: string): string {
+  return name.replace(/\s*\(\s*most popular\s*\)\s*$/i, "").trim();
+}
+
 export function ServiceCard({ service, variant = "compact" }: ServiceCardProps) {
   const isFull = variant === "full";
+  // `featured` is the CMS flag for the tier to push. It used to be ANDed with a
+  // hardcoded slug that no longer exists, so no card ever rendered as featured.
+  const featured = Boolean(service.featured);
 
   return (
     <div
-      className={`card-surface flex h-full flex-col p-7 ${
+      className={`card-surface relative flex h-full flex-col p-7 ${
         isFull ? "md:p-9" : ""
-      }`}
+      } ${featured ? "border-brand/50 ring-1 ring-brand/30" : ""}`}
     >
-      <div className="flex items-baseline justify-between gap-4">
-        <h3 className="text-xl tracking-tightish text-cream-100 md:text-2xl">
-          {service.name}
-        </h3>
-      </div>
+      {featured && (
+        <span className="absolute -top-3 left-7 rounded-full bg-brand px-3 py-1 font-display text-[11px] uppercase tracking-wider2 text-cream-100">
+          Most Popular
+        </span>
+      )}
+
+      <h3 className="text-xl tracking-tightish text-cream-100 md:text-2xl">
+        {displayName(service.name)}
+      </h3>
 
       <div className="mt-3 flex items-baseline gap-2">
         <span className="font-display text-3xl text-brand">{service.price}</span>
@@ -76,14 +92,16 @@ export function ServiceCard({ service, variant = "compact" }: ServiceCardProps) 
         </p>
       )}
 
-      <div className="mt-7 pt-1">
+      {/* mt-auto pins every CTA to the bottom of the card, so buttons line up
+          across a row even when the cards above them differ in length. */}
+      <div className="mt-auto pt-7">
         <CtaButton
           cta={{
             text: service.ctaText,
             type: service.ctaType,
             target: service.ctaType === "payment" ? service.paymentLink : undefined,
           }}
-          variant={service.featured && service.slug === "virtual-coaching" ? "primary" : "secondary"}
+          variant={featured ? "primary" : "secondary"}
           className="w-full"
         />
       </div>
