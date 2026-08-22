@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { track } from "@vercel/analytics";
 import { submitInquiry } from "@/app/(site)/contact/actions";
 import { LIMITS, EMPTY_STATE } from "@/lib/contact";
+import { reportConversion } from "@/lib/analytics";
 import { ArrowIcon, CheckIcon } from "./Icons";
 
 /**
@@ -23,7 +24,14 @@ import { ArrowIcon, CheckIcon } from "./Icons";
  * the "email me directly" fallback — the send target is read from the CMS
  * server-side and is never accepted from the client.
  */
-export function ContactForm({ email }: { email: string }) {
+export function ContactForm({
+  email,
+  conversionSendTo,
+}: {
+  email: string;
+  /** Google Ads `send_to`, or null when tracking is not configured. */
+  conversionSendTo?: string | null;
+}) {
   const [state, formAction] = useActionState(submitInquiry, EMPTY_STATE);
   const formRef = useRef<HTMLFormElement>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
@@ -31,12 +39,17 @@ export function ContactForm({ email }: { email: string }) {
   useEffect(() => {
     if (state.status === "success") {
       track("contact_submit");
+      // Fires only on a real send — the server confirmed the email went out.
+      // Counting a page view or a click here would teach Google Ads to buy
+      // traffic that never becomes a client, which is the whole failure this
+      // is meant to prevent.
+      reportConversion(conversionSendTo ?? null);
       formRef.current?.reset();
     }
     // Move focus to the error summary so a screen reader announces the failure
     // rather than leaving the user to discover it.
     if (state.status === "error" && state.formError) errorRef.current?.focus();
-  }, [state]);
+  }, [state, conversionSendTo]);
 
   const fieldClass =
     "w-full border-0 border-b border-white/20 bg-transparent px-0 py-3 text-cream-100 placeholder:text-cream-500 transition-colors focus:border-brand focus:outline-none focus:ring-0";

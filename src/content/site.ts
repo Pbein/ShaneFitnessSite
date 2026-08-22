@@ -32,6 +32,12 @@ export interface PaymentLink {
   url: string;
 }
 
+export interface GoogleAdsSettings {
+  conversionId?: string;
+  contactLabel?: string;
+  purchaseLabel?: string;
+}
+
 export interface SiteSettings {
   businessName: string;
   tagline: string;
@@ -39,6 +45,8 @@ export interface SiteSettings {
   phone?: string;
   serviceArea: string;
   socialLinks: SocialLink[];
+  /** Google Ads conversion tracking, set in the CMS. Absent = no tracking loads. */
+  googleAds?: GoogleAdsSettings;
   /** Calendly / Google scheduling URL — STUB. */
   bookingUrl: string;
   /** Calendly "first session" (monthly, Meet) booked on /welcome for the Essential tier. */

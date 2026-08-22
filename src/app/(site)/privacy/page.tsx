@@ -89,13 +89,34 @@ export default async function PrivacyPage() {
                 cookies and without building a profile of you. I can see that a page
                 was visited and roughly where from — not who you are.
               </p>
+              <h3>Google Ads</h3>
+              <p>
+                I advertise on Google. To see whether that advertising is worth
+                paying for, the site loads Google&apos;s tag, which sets cookies and
+                lets Google tell that someone who clicked an ad later sent the
+                contact form or completed a purchase. Google receives that signal;
+                what I see is a count, not a list of people.
+              </p>
+              <p>
+                If you would rather not be measured this way, you can{" "}
+                <a
+                  href="https://adssettings.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  turn off ad personalisation in your Google account
+                </a>
+                , or use a browser or extension that blocks it — the site works
+                exactly the same either way, and blocking it costs you nothing.
+              </p>
 
               <h2>Third parties, and one you should know about</h2>
               <p>
                 The services behind this site are Vercel (hosting and analytics),
                 Sanity (the content system — it stores the site&apos;s words and
-                images, no visitor data), Stripe (payments), and Calendly
-                (scheduling).
+                images, no visitor data), Stripe (payments), Calendly (scheduling),
+                Resend (which delivers the contact form to my inbox), and Google
+                (advertising measurement).
               </p>
               <p>
                 One thing worth being upfront about: <strong>the embedded Calendly

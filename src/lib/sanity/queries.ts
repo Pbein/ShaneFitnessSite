@@ -11,7 +11,8 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   paymentLinks[]{ label, url },
   manageSubscriptionUrl,
   logo,
-  seo{ title, description }
+  seo{ title, description },
+  googleAds{ conversionId, contactLabel, purchaseLabel }
 }`;
 
 export const homepageQuery = groq`*[_type == "homepage"][0]{

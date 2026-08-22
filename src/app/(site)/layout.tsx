@@ -7,6 +7,7 @@ import { SITE_URL } from "@/lib/seo";
 import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { GoogleAdsTag } from "@/components/GoogleAdsTag";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -84,6 +85,12 @@ export default async function SiteLayout({
         <SiteFooter settings={settings} nav={nav} />
       </CtaSettingsProvider>
       <Analytics />
+      {/* Renders nothing until Shane sets a Conversion ID in Site Settings, so
+          the site ships no Google tracking until he chooses to. Read through
+          ISR on a 60s window, which means adding the ID takes effect within
+          about a minute — no rebuild, unlike a NEXT_PUBLIC_ env var, which
+          would be baked in at build time and need a redeploy. */}
+      <GoogleAdsTag conversionId={settings.googleAds?.conversionId} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { CalendlyInline } from "@/components/CalendlyInline";
 import { MailIcon, InstagramIcon } from "@/components/Icons";
 import { isEmbeddableCalendly } from "@/lib/booking";
+import { conversionSendTo } from "@/lib/analytics";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -21,6 +22,12 @@ export default async function ContactPage() {
     throw new Error("Missing siteSettings document in the CMS");
   }
   const instagram = siteSettings.socialLinks.find((s) => s.platform === "instagram");
+  // Resolved server-side so the client never has to know whether tracking is
+  // configured — it just gets a string or null.
+  const sendTo = conversionSendTo(
+    siteSettings.googleAds?.conversionId,
+    siteSettings.googleAds?.contactLabel,
+  );
 
   return (
     <>
@@ -80,7 +87,7 @@ export default async function ContactPage() {
               Fill out the form below to get started.
             </p>
             <div className="mt-8">
-              <ContactForm email={siteSettings.email} />
+              <ContactForm email={siteSettings.email} conversionSendTo={sendTo} />
             </div>
           </div>
         </Reveal>

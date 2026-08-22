@@ -75,6 +75,13 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     manageSubscriptionUrl: r.manageSubscriptionUrl,
     logo: imageUrl(r.logo),
     seo: { title: r.seo?.title ?? "", description: r.seo?.description ?? "" },
+    googleAds: r.googleAds
+      ? {
+          conversionId: t(r.googleAds.conversionId),
+          contactLabel: t(r.googleAds.contactLabel),
+          purchaseLabel: t(r.googleAds.purchaseLabel),
+        }
+      : undefined,
   };
 }
 
@@ -208,6 +215,7 @@ type RawSiteSettings = {
   manageSubscriptionUrl?: string;
   logo?: SanityImageSource;
   seo?: { title?: string; description?: string };
+  googleAds?: { conversionId?: string; contactLabel?: string; purchaseLabel?: string };
 };
 
 type RawHomepage = {

@@ -6,6 +6,8 @@ import { CalendlyInline } from "@/components/CalendlyInline";
 import { isEmbeddableCalendly } from "@/lib/booking";
 import { resolveWelcome } from "@/lib/welcome";
 import { CheckIcon } from "@/components/Icons";
+import { ConversionOnMount } from "@/components/ConversionOnMount";
+import { conversionSendTo } from "@/lib/analytics";
 
 // Post-payment landing page — not meant to be found via search.
 export const metadata: Metadata = {
@@ -27,9 +29,16 @@ export default async function WelcomePage({
   const copy = resolveWelcome(plan, siteSettings);
   const bookingUrl = copy.bookingUrl;
   const canEmbed = isEmbeddableCalendly(bookingUrl);
+  // Reaching this page means Stripe took payment, so arriving here IS the
+  // conversion. Optional: fires only if Shane has set a purchase label.
+  const purchaseSendTo = conversionSendTo(
+    siteSettings.googleAds?.conversionId,
+    siteSettings.googleAds?.purchaseLabel,
+  );
 
   return (
     <section className="section pt-32">
+      <ConversionOnMount sendTo={purchaseSendTo} dedupeKey={`purchase:${plan ?? "unknown"}`} />
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/15 text-brand">
