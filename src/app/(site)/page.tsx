@@ -49,10 +49,8 @@ export default async function HomePage() {
             it as a fallback, so this ships from /public instead. Move it back to
             the CMS field once that freeze lifts, so Shane can swap it himself.
 
-            The photo carries its own composition — Shane is on the right, empty
-            wall on the left — so the treatment only has to protect the headline,
-            not rescue the image. The old `opacity-40` plus a full-strength
-            left-to-right scrim crushed it to near-invisible. */}
+            A room rather than a portrait, so there is no subject to crop badly at
+            any width, and it is branded — the TRAIN SHANE sign is in frame. */}
         <div className="absolute inset-0 -z-10">
           <Image
             src="/images/hero-gym-room.jpg"
@@ -62,14 +60,20 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover object-[72%_center] md:object-center"
           />
-          {/* A room rather than a portrait, so nothing here is a subject that can
-              be cropped badly — the treatment just has to hold the headline and
-              stop the warm lighting fighting the charcoal palette. */}
-          {/* Narrow screens put the text over the middle of the room, so they
-              need a flat scrim; wide screens keep the right side almost clear,
-              because the point of a photograph is to be visible. */}
-          <div className="absolute inset-0 bg-ink-950/40 md:bg-ink-950/10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/60 to-transparent" />
+          {/* The lit wall on the left averages ~140/255, and the headline is
+              near-white, so brightening the whole frame would leave the text
+              sitting at roughly 2.4:1 — unreadable. Instead the darkening is
+              spent where the words are and withdrawn everywhere else: held to
+              55% of the width (the headline ends around 64% on desktop), then
+              released so the rack, the plant and the TRAIN SHANE sign come
+              through at full strength. Narrow screens put text over the middle
+              of the room, so they keep a flat scrim as well — held to `lg` and
+              not `md`, because at exactly 768 the measured worst-pixel contrast
+              behind the headline dropped to 3.7:1, the weakest of any width.
+              45% is the floor, not a guess: at 32% the cream-300 subheadline
+              fell under 4.5:1 on every phone width. */}
+          <div className="absolute inset-0 bg-ink-950/45 lg:bg-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 from-0% via-ink-950/80 via-55% to-transparent to-92%" />
           {/* The previous hero ended in a hard horizontal line where the section
               stopped, because the fade had gone transparent by halfway up.
               Carrying ink-950 further lands the bottom edge on the page's own
