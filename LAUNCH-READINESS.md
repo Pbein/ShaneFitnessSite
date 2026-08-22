@@ -214,6 +214,23 @@ one purpose-made image, since Instagram → link-share is the likely traffic pat
 `track("cta_click", …)` for booking/payment, but a form submit is untracked. Add one
 once B1 gives it a real submit.
 
+**S10 — The brand-red eyebrow labels are under the contrast minimum, site-wide.**
+Found while verifying the hero, but it is not a hero problem. `text-brand`
+(`#D62828`) on `ink-950` measures **4.0:1**, and WCAG AA wants 4.5:1 for text this
+size (14px, not large-text). Over the hero photograph it drops to about 3.5:1 at the
+5th percentile. Every `SectionHeading` eyebrow on every page uses this colour, so
+this predates the hero work and is a deliberate brand choice rather than a bug.
+
+Options, cheapest first: switch eyebrows to `brand-light` (`#E5383B`), which buys
+roughly a point of contrast for a barely perceptible shift in hue; bump the eyebrow
+to 16px; or accept it, on the grounds that the eyebrow is a decorative label whose
+information is always repeated in the heading beneath it. **A design call, not a
+defect — worth making deliberately rather than by default.**
+
+For contrast, the measured numbers for the hero's actual content, taken at glyph
+level: headline 12.2–15.5:1 and subheadline 5.9–8.6:1 at the 5th percentile across
+eight widths. Those are comfortable.
+
 **S9a — Do not merge `origin/vercel/react-server-components-cve-vu-6ku0wv`.**
 Vercel auto-opened this branch, but it is based on `50127d9` ("Phase 1 — visual
 demo"), long before the CMS existed. Diffed against `origin/main` it removes **20,075
