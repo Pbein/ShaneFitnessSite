@@ -24,7 +24,10 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   if (!settings) return {};
-  const ogImage = { url: "/images/hero-dumbbell.jpg", width: 2500, height: 1667 };
+  // Purpose-built 1200x630 share card. The old value was the 2500x1667 hero
+  // photo at 514KB — the wrong aspect ratio for every social preview, so it got
+  // cropped unpredictably, and heavy for something fetched by a scraper.
+  const ogImage = { url: "/images/og-card.jpg", width: 1200, height: 630 };
   return {
     metadataBase: new URL(SITE_URL),
     title: {
