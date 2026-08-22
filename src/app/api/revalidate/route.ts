@@ -16,9 +16,25 @@ export async function POST(req: NextRequest) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
   const provided = req.headers.get("x-revalidate-secret");
 
-  if (!secret || provided !== secret) {
+  // A missing server-side secret and a wrong header are very different problems,
+  // and returning one 401 for both hid the worse of the two: unconfigured, every
+  // webhook silently 401s and revalidation quietly degrades to the 60s ISR
+  // fallback — which reads as "it works, just slowly" rather than as a failure.
+  // Fail loudly and distinguishably instead.
+  if (!secret) {
     return NextResponse.json(
-      { revalidated: false, message: "Invalid or missing secret" },
+      {
+        revalidated: false,
+        message:
+          "SANITY_REVALIDATE_SECRET is not set on the server — on-demand revalidation is disabled.",
+      },
+      { status: 500 },
+    );
+  }
+
+  if (provided !== secret) {
+    return NextResponse.json(
+      { revalidated: false, message: "Invalid secret" },
       { status: 401 },
     );
   }
