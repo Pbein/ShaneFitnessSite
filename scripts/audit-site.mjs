@@ -112,13 +112,18 @@ for (const vp of VIEWPORTS) {
         await btn.click();
         await page.waitForTimeout(450);
         menu = await page.evaluate(() => {
-          const panel = document.querySelector('header > div:last-child');
+          // By id, not by position: the panel used to be the header's last child
+          // and is now its first, which silently turned this check into a
+          // measurement of the bar instead.
+          const panel = document.getElementById('mobile-menu');
           const r = panel?.getBoundingClientRect();
           return {
             bodyOverflow: getComputedStyle(document.body).overflow,
+            panelTop: r ? Math.round(r.top) : null,
             panelBottom: r ? Math.round(r.bottom) : null,
             panelHeight: r ? Math.round(r.height) : null,
             viewportH: window.innerHeight,
+            closeButton: !!document.querySelector('button[aria-label="Close menu"]'),
           };
         });
         await page.mouse.wheel(0, 600);

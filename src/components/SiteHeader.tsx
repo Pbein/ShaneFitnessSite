@@ -17,6 +17,29 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
+/** The three bars, shown as a hamburger or an X. Shared by the open and close controls. */
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <div className="space-y-1.5">
+      <span
+        className={`block h-0.5 w-6 bg-cream-100 transition-transform duration-300 ${
+          open ? "translate-y-2 rotate-45" : ""
+        }`}
+      />
+      <span
+        className={`block h-0.5 w-6 bg-cream-100 transition-opacity duration-300 ${
+          open ? "opacity-0" : ""
+        }`}
+      />
+      <span
+        className={`block h-0.5 w-6 bg-cream-100 transition-transform duration-300 ${
+          open ? "-translate-y-2 -rotate-45" : ""
+        }`}
+      />
+    </div>
+  );
+}
+
 export function SiteHeader({ settings }: { settings: HeaderSettings }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -34,11 +57,14 @@ export function SiteHeader({ settings }: { settings: HeaderSettings }) {
     setOpen(false);
   }, [pathname]);
 
-  // While the full-screen menu is open, the page behind it must not scroll —
-  // otherwise closing the menu drops you somewhere you never chose to be.
-  // overflow:hidden (rather than the position:fixed trick) keeps the sticky bar
-  // pinned where it is, but it does clamp the scroll offset to 0, so the
-  // position has to be captured on open and put back on close.
+  // While the menu is open the page behind it must not scroll, or closing drops
+  // you somewhere you never chose to be. overflow:hidden also clamps the scroll
+  // offset to 0, so the position is captured on open and put back on close.
+  //
+  // Nothing here moves the layout: the bar stays in flow and stays `sticky`.
+  // An earlier attempt switched it to `fixed` so it would stay on screen, which
+  // pulled its 80px out of the document and left the restored scroll ~50px off.
+  // The overlay carries its own logo and close button instead — see below.
   useEffect(() => {
     if (!open) return;
     const { documentElement: html, body } = document;
@@ -69,11 +95,84 @@ export function SiteHeader({ settings }: { settings: HeaderSettings }) {
 
   return (
     // No filter/transform on <header> itself: a backdrop-blur here would become
-    // the containing block for the `fixed` mobile panel below and break it.
+    // the containing block for the `fixed` overlay below and break it.
     <header className="sticky top-0 z-50">
+      {/* Mobile menu — a full-viewport overlay anchored at `inset-0`, not below
+          the bar. Locking the page with overflow:hidden removes the scrollport
+          that `position: sticky` depends on, so the bar silently reverts to its
+          static position at the top of the document. A panel that started at
+          `top-20` therefore left a strip of the underlying page showing at the
+          top of the screen on iOS, and the bar itself scrolled out of view.
+
+          Covering the whole viewport makes the overlay independent of whatever
+          the bar does, and the overlay carries its own logo and close button so
+          there is always something to dismiss it with. `invisible` when closed
+          keeps the links out of the tab order. */}
+      <div
+        id="mobile-menu"
+        className={`fixed inset-0 z-40 min-h-[100dvh] overflow-y-auto overscroll-contain bg-ink-950 transition-opacity duration-300 lg:hidden ${
+          open ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        {/* Safe-area padding goes on the CONTENT, never on the black itself:
+            insetting the overlay would recreate the exposed strip. */}
+        <div className="flex min-h-full flex-col pt-[env(safe-area-inset-top)]">
+          <div className="container-x flex h-20 shrink-0 items-center justify-between">
+            <Link
+              href="/"
+              className="flex items-center gap-3"
+              aria-label={settings.businessName}
+            >
+              <Image
+                src={settings.logo}
+                alt=""
+                width={48}
+                height={48}
+                className="h-11 w-11 rounded-md object-contain"
+              />
+              <span className="font-display text-lg uppercase tracking-wider2 text-cream-100">
+                Train<span className="text-brand">Shane</span>
+              </span>
+            </Link>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
+              className="flex h-10 w-10 items-center justify-center"
+            >
+              <MenuIcon open />
+            </button>
+          </div>
+
+          <nav className="container-x flex flex-col gap-1 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-2">
+            {navLinks.map((link) => {
+              const active =
+                link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`rounded-md px-3 py-3 font-display text-base uppercase tracking-wider2 transition-colors ${
+                    active ? "bg-white/5 text-brand" : "text-cream-300 hover:bg-white/5"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            <CtaButton
+              cta={{ text: "Book Now", type: "booking" }}
+              variant="primary"
+              withArrow={false}
+              className="mt-3"
+            />
+          </nav>
+        </div>
+      </div>
+
       <div
         className={`border-b transition-colors duration-300 ${
-          scrolled || open
+          scrolled
             ? "border-white/10 bg-ink-950/90 backdrop-blur-md"
             : "border-transparent bg-transparent"
         }`}
@@ -121,70 +220,19 @@ export function SiteHeader({ settings }: { settings: HeaderSettings }) {
             />
           </div>
 
-          {/* Mobile toggle */}
+          {/* Mobile toggle — opens the overlay; the overlay's own button closes it. */}
           <button
             type="button"
             aria-label="Toggle menu"
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="relative z-50 flex h-10 w-10 items-center justify-center lg:hidden"
+            className="flex h-10 w-10 items-center justify-center lg:hidden"
           >
             <span className="sr-only">Menu</span>
-            <div className="space-y-1.5">
-              <span
-                className={`block h-0.5 w-6 bg-cream-100 transition-transform duration-300 ${
-                  open ? "translate-y-2 rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-6 bg-cream-100 transition-opacity duration-300 ${
-                  open ? "opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-6 bg-cream-100 transition-transform duration-300 ${
-                  open ? "-translate-y-2 -rotate-45" : ""
-                }`}
-              />
-            </div>
+            <MenuIcon open={false} />
           </button>
         </div>
-      </div>
-
-      {/* Mobile menu — fills everything below the bar down to the bottom of the
-          viewport (top-20 matches the h-20 bar), so there is no strip of page
-          showing through underneath it. `invisible` when closed also keeps the
-          links out of the tab order. */}
-      <div
-        id="mobile-menu"
-        className={`fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto overscroll-contain border-t border-white/10 bg-ink-950 transition-opacity duration-300 lg:hidden ${
-          open ? "visible opacity-100" : "invisible opacity-0"
-        }`}
-      >
-        <nav className="container-x flex min-h-full flex-col gap-1 py-4">
-          {navLinks.map((link) => {
-            const active =
-              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-md px-3 py-3 font-display text-base uppercase tracking-wider2 transition-colors ${
-                  active ? "bg-white/5 text-brand" : "text-cream-300 hover:bg-white/5"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <CtaButton
-            cta={{ text: "Book Now", type: "booking" }}
-            variant="primary"
-            withArrow={false}
-            className="mt-3"
-          />
-        </nav>
       </div>
     </header>
   );
