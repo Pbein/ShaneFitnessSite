@@ -1,7 +1,34 @@
 # Launch Readiness — Train Shane
 
-**Target: Sunday 2026-08-23.** Custom domain connected, site live, clients able to
-book and buy.
+# ✅ LAUNCHED 2026-08-22 — a day early
+
+**`https://trainshane.com` is live.** Domain connected with certificates on both
+hostnames, `www` 308-redirecting to the apex with the path preserved, all site
+metadata rebuilt onto the new host, all three Stripe payment links redirecting to
+the right tier, and the contact form sending real email to Shane's inbox
+(confirmed `delivered`, not merely queued).
+
+**The one thing still genuinely unverified is the money path**: no real card has
+been run end to end. Everything about it is *configured* correctly and each
+`/welcome?plan=` destination was checked by hand, but nobody has yet watched
+Stripe fire the redirect, the receipt land, and Calendly produce an actual invite.
+Planned for 2026-08-22/23 with Shane. Until then, treat "clients can buy" as
+probable rather than proven.
+
+**Live since launch:** Shane is running Google Ads at $3/day, and there is **no
+conversion tracking on the site**, so that spend currently produces no data — see
+§8.
+
+Companion documents, both current:
+- **`docs/DOMAIN-GO-LIVE.md`** — the domain runbook and everything that was done
+  to it, including the Sanity CORS step that only surfaced after go-live.
+- **`docs/CONTACT-FORM.md`** — how the form works and why each decision went the
+  way it did.
+
+---
+
+**Original target: Sunday 2026-08-23.** Custom domain connected, site live,
+clients able to book and buy.
 
 **Status of this repo: ACTIVE again.** The 2026-08-19 decision to freeze it as
 reference-only for the Spiderweb port is reversed. `PORT-INVENTORY.md` stays valid as
@@ -456,3 +483,98 @@ Order matters — several of these bake values into a static build.
 - Graceful CMS-outage degradation (S2) instead of a site-wide 500.
 - The Spiderweb port, whenever it resumes — `PORT-INVENTORY.md` stays the reference,
   minus the gaps this document closes.
+
+---
+
+## 8. Post-launch log — 2026-08-22, after go-live
+
+Things that happened *after* the site went live, in the order they came up.
+
+### 8.1 Sanity CORS — the step the runbook didn't have
+
+Opening `https://trainshane.com/studio` for the first time prompted for CORS
+approval. Sanity only answers browser requests from an explicitly allow-listed
+origin; the old `shane-fitness-site.vercel.app` was on the list and the new domain
+was not.
+
+**Why it's worth its own note:** nothing on the public site depends on it. Every
+marketing page is server-rendered and fetches from Sanity server-side, where CORS
+doesn't apply. So a complete pass over the live site — status codes, canonicals,
+metadata, the full browser audit — passes while `/studio` is quietly dead. The
+only way to catch it is to open the Studio on the new domain.
+
+Approved via the prompt (one click). Documented properly in
+`docs/DOMAIN-GO-LIVE.md` Part D step 4, with the deliberate route through
+sanity.io/manage, the "Allow credentials" tick, and a symptom row in the
+troubleshooting table. The old vercel.app origin is deliberately left in place as
+a fallback route into the CMS.
+
+**Generalisable:** after any hostname change, list the third-party services that
+allow-list origins or redirect URIs, and check each one. Server-side integrations
+keep working and hide the problem.
+
+### 8.2 Instagram link hidden, not deleted
+
+Shane started a personal-training Instagram that isn't ready. A link to a
+half-built profile is worse than no link — the people who click are the interested
+ones, and an empty grid is the impression they leave with.
+
+`socialLink` gained a **"Show on the website"** toggle; the Instagram entry is
+switched off with its URL intact. Turning it back on is one tick in Site Settings,
+live within the ISR minute, no deploy. Filtering happens in GROQ
+(`socialLinks[visible != false]`) rather than in the component, so a hidden link
+never reaches the browser. Links predating the field have `visible: null`, and
+`null != false` is true in GROQ, so they keep showing — verified against the real
+dataset, not assumed.
+
+### 8.3 Shane's private to-do list in the Studio
+
+New `ownerTask` document type, first item in the Studio structure, split into
+**Do first / Still to do / Done** plus a by-category view. It is private by
+construction: `/studio` requires a Sanity login and is disallowed in `robots.txt`,
+and **no route, component or fetcher in the site references `ownerTask`** — there
+is nothing that could render it publicly even by mistake.
+
+Each task carries what it is, why it matters, the actual clicks, and the mistake
+people usually make, because Shane didn't build any of this and shouldn't have to
+ask what a negative keyword is. There's a **Your notes** field for him to write
+back in.
+
+16 tasks seeded by `scripts/seed-owner-tasks.mjs`, which uses `createIfNotExists`
+with stable ids — re-running adds anything missing and never overwrites the `done`
+tick or the notes, both of which are Shane's.
+
+**One deliberate departure from what was asked.** The example given was "get 5
+real reviews from family and friends". Reviews from people who were never clients
+breach Google's policy: they get removed, and the profile itself can be suspended,
+which would cost the listing entirely. The task instead asks people he has
+*genuinely trained* — friends and family included — supplies the message to send,
+and states plainly why the shortcut isn't worth it, along with the legitimate
+version: train a few people free or discounted first, then ask.
+
+### 8.4 Google Ads is live and unmeasured — the current top priority
+
+Shane started Google Ads at **$3/day** as soon as the site went live. Two problems,
+both live right now:
+
+1. **No conversion tracking exists on this site.** There is no Google tag, and
+   nothing reports a contact-form submission back to Ads. So there is no way to
+   tell a keyword that produces clients from one that produces nothing, and
+   Google's bidding has no conversion signal to optimise toward — it optimises for
+   cheap clicks instead, which is not what he's buying. At $3/day that's roughly
+   $90/month spent blind.
+2. **Location targeting is very likely still on Google's default**, "Presence or
+   interest", which shows ads to people merely *interested in* the area rather than
+   in it. The setting is hidden behind a collapsed "Location options" link, so it
+   stays on the default unless someone deliberately changed it.
+
+Both are tasks in the Studio list (`ads-conversion-tracking`, `ads-location-targeting`).
+The website half of #1 — adding the Google tag and firing a conversion event on a
+*successful* form send, not a page view — **is not built and is the most valuable
+remaining piece of work on the site.** It needs the Conversion ID and Label from
+Shane's Ads account first.
+
+Worth setting expectations alongside it: at typical personal-training click costs,
+$3/day buys roughly one click a day. One inquiry every two to three weeks is a
+normal result at that spend, and judging it sooner will lead to switching things
+off before they've shown anything.

@@ -246,6 +246,31 @@ Do this **after** the site is confirmed live, not during. One change at a time.
    Skipping this produces a site that *looks* fine and is quietly wrong in every
    canonical tag, every Open Graph share card, and the sitemap.
 
+4. **Add the new domain as a CORS origin in Sanity.** ✅ done 2026-08-22
+
+   The Studio at `https://trainshane.com/studio` talks to Sanity's API from the
+   browser, and Sanity only answers browsers on an **explicitly allow-listed
+   origin**. The old `shane-fitness-site.vercel.app` was on that list; the new
+   domain was not, so the Studio loaded and then failed to fetch anything.
+
+   Sanity prompts you to approve the new origin the first time you open the
+   Studio on it, which is how this was actually caught — worth knowing it is a
+   one-click approval, not a debugging session.
+
+   To do it deliberately instead of being prompted:
+   [sanity.io/manage](https://www.sanity.io/manage) → project `gze75bpb` →
+   **API → CORS origins → Add origin** → `https://trainshane.com`, and **tick
+   "Allow credentials"** (the Studio authenticates; without it you get a login
+   loop rather than a clear error). Add `https://www.trainshane.com` too if you
+   ever serve the Studio there — with the 308 redirect in place you don't need
+   to.
+
+   > **This step is invisible until it bites.** Nothing about the site's public
+   > pages depends on it — they're server-rendered and fetch from Sanity
+   > server-side, where CORS does not apply. Only the browser-based Studio
+   > breaks, so a full check of the live site passes while `/studio` is dead.
+   > Leave the old vercel.app origin in place as a fallback route into the CMS.
+
 ---
 
 # PART E — Stripe
@@ -367,6 +392,10 @@ Then by hand, in a browser:
       with no page visible behind it at the top.
 - [ ] Paste `https://trainshane.com` into an iMessage or a Slack DM and confirm
       the share card renders with the right image and title.
+- [ ] **Open `https://trainshane.com/studio` and confirm content actually
+      loads**, not just that the page renders. If documents fail to appear or
+      you get a login loop, the CORS origin from Part D step 4 is missing. This
+      is the one check that a full pass over the public site will never catch.
 - [ ] Publish a trivial CMS edit and watch it land. Seconds = the webhook is
       good. About a minute = ISR is carrying it (fine). Never = stop and
       investigate.
@@ -383,6 +412,7 @@ Nothing here is a one-way door.
 | Vercel stuck on "Invalid Configuration" | Value mismatch, or a leftover parking record at the same name | Compare against the Vercel card character by character; delete duplicates |
 | Certificate never issues | CAA record excludes Let's Encrypt | Add `0 issue "letsencrypt.org"`, or remove the CAA records |
 | Site loads, but canonicals and sitemap still say `.vercel.app` | The redeploy in Part D step 3 did not happen | `vercel --prod` |
+| Public site fine, but `/studio` shows no content or loops on login | New domain isn't a Sanity CORS origin | Part D step 4 — add it with "Allow credentials" ticked |
 | Everything is broken and it is Sunday | — | The old `shane-fitness-site.vercel.app` URL still works and is untouched by any of this. Point Instagram back at it and debug on Monday. |
 
 Adding a custom domain does not decommission the old Vercel URL. It remains a
@@ -403,6 +433,9 @@ Cloudflare: paste Vercel + Resend records,       (Part C)  ~10 min
         wait for Valid Configuration                 minutes to hours
   |
 Vercel: NEXT_PUBLIC_SITE_URL, then REDEPLOY      (Part D)  ~5 min
+  |
+Sanity: add the domain as a CORS origin          (Part D4) ~2 min
+        — or /studio loads but stays empty
   |
 Stripe: 3 redirects, portal URL, ToS checkbox    (Part E)  ~10 min
   |
