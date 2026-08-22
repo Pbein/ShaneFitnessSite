@@ -128,7 +128,7 @@ Production → **redeploy** → verify. Full runbook in §6.
 | **"(Most Popular)" no longer printed twice** | It was typed into the CMS *name* field. Stripped for display so the badge is the only place it appears. (Still worth removing at the source — §3, C4.) |
 | **Missing `<h1>` on /services, /success-stories, /resources** | All three started at `<h2>` — including `/services`, the page that has to rank. `SectionHeading` takes an `as` prop; each page now has exactly one `<h1>`. |
 | **CMS whitespace trimmed** | `"$100 "`, `"1 Hour "`, `"Book Session "`, `"All training equipment provided "` etc. now trimmed in the fetch layer, so trailing spaces stop showing as odd gaps. |
-| **Real hero photo, and a treatment that lets it show** | The old image sat at `opacity-40` under two stacked scrims and was effectively invisible. Replaced with Shane's gym photo, which carries its own composition — him on the right, empty wall on the left — so the treatment now only protects the headline instead of trying to rescue the image. Narrow screens crop in on him and get a flat scrim; wide screens don't need one. **Shipped from `/public`, not the CMS field**, because the Sanity `production` dataset is frozen read-only for the Spiderweb fallback — move it back to `homepage.hero.image` once that lifts, so Shane can swap it himself. Source is 1672×941; worth getting the full-resolution original from the photographer for 2× displays. |
+| **Real hero image, and a treatment that lets it show** | The old image sat at `opacity-40` under two stacked scrims and was effectively invisible. Now a branded gym room (the TRAIN SHANE sign is in frame) with a large empty wall where the headline sits. Went through a portrait of Shane first, which revealed a second bug: the hero ended in a hard horizontal line because the bottom fade had gone fully transparent by the midpoint, cutting the photo off mid-subject against the next section. The fade now carries `ink-950` to 38%, so the edge lands on the page's own background. Verified by sampling row-average luminance across the boundary — flat through the image, with the only step being one row of the next section's deliberate 1px `border-white/10` divider. Checked at 375/390/412/768/1366/1440/1920: the image box covers the section exactly at every one. **Shipped from `/public`, not the CMS field**, because the Sanity `production` dataset is frozen read-only for the Spiderweb fallback — move it back to `homepage.hero.image` once that lifts, so Shane can swap it himself. Source is 1536×1024, so it upscales ~1.25× at 1920; worth re-rendering wider if possible. Shane's portrait is now unused in the hero but remains the source of the OG share card, which is the right place for it — a person converts better on a social share than an empty room. |
 | **Branded 404 and error boundaries** | Added `app/not-found.tsx` (global 404), `app/(site)/error.tsx` (page-level), and `app/global-error.tsx` — the last of which is the only thing that catches a throw in the `(site)` layout, which is exactly what a missing siteSettings document causes. All three make no CMS call and pull no shared chrome, on the principle that they render when nothing else does. Verified: an unmatched URL now returns 404 with the branded page. |
 | **Page no longer depends on JS to be visible** | Every section below the hero starts at `opacity: 0` and is un-hidden by an IntersectionObserver (19 of 19 elements on the homepage). Added a `@media (scripting: none)` fallback so a scripting failure doesn't render the site blank. |
 
@@ -225,10 +225,23 @@ The underlying question it raises is still worth answering separately: check whe
 `next@15.1.11` is actually affected by the RSC advisory and, if so, bump Next on a
 branch of your own. Do not let a misleading auto-branch stand in for that.
 
-**S9 — No privacy policy, terms, or refund/cancellation policy.** The site now takes
-names and emails, runs Vercel Analytics, loads a Facebook pixel via Calendly, and
-sells recurring subscriptions. A short policy page and a refund/cancellation
-statement are worth having on day one, and Stripe will expect the latter.
+**S9 — DONE, with a caveat.** `/privacy` and `/terms` are live, linked in the footer,
+in the sitemap, and covered by the canonical regression test. Written in plain English,
+and every factual claim checked against the audit rather than assumed — including the
+awkward one: the Calendly embed pulls in reCAPTCHA and the Meta pixel, disclosed
+plainly with an email fallback offered to anyone who would rather avoid it.
+
+**The caveat: these are not legal advice, and a website ToS is not a liability
+waiver.** For in-person training the real protection is a signed waiver plus a health
+questionnaire (PAR-Q) before the first session. The terms page supports that; it does
+not replace it.
+
+**Six specifics in the terms are sensible defaults, not Shane's stated policy**, and
+need his confirmation before anyone relies on them: the 24-hour cancellation window
+and whether a late cancel is charged; no part-month refunds; 30 days' notice on price
+changes; late arrival shortening rather than extending a session; the legal entity
+name (sole proprietor or LLC); and the governing-law jurisdiction, which I left out
+rather than guess between DC, Maryland and Virginia.
 
 ---
 
