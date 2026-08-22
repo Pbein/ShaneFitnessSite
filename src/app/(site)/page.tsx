@@ -44,16 +44,29 @@ export default async function HomePage() {
     <>
       {/* ---------------- Hero ---------------- */}
       <section className="relative isolate overflow-hidden">
+        {/* Hero photo. Deliberately NOT `homepage.hero.image` for now: the Sanity
+            `production` dataset is frozen read-only while the Spiderweb port keeps
+            it as a fallback, so this ships from /public instead. Move it back to
+            the CMS field once that freeze lifts, so Shane can swap it himself.
+
+            The photo carries its own composition — Shane is on the right, empty
+            wall on the left — so the treatment only has to protect the headline,
+            not rescue the image. The old `opacity-40` plus a full-strength
+            left-to-right scrim crushed it to near-invisible. */}
         <div className="absolute inset-0 -z-10">
           <Image
-            src={homepage.hero.image}
-            alt=""
+            src="/images/hero-shane-gym.png"
+            alt="Shane in the gym, seated beside a loaded barbell"
             fill
             priority
-            className="object-cover object-center opacity-40"
+            sizes="100vw"
+            className="object-cover object-[68%_center] md:object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/85 to-ink-950/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-950 to-transparent" />
+          {/* Narrow screens crop in on Shane, so the headline needs a flat scrim
+              over him. Wide screens don't — the wall is already behind the text. */}
+          <div className="absolute inset-0 bg-ink-950/60 md:bg-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/70 to-ink-950/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-transparent to-transparent" />
         </div>
 
         <div className="container-x flex min-h-[88vh] flex-col justify-center py-28">
