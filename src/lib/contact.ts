@@ -22,6 +22,30 @@ export type InquiryFields = {
 
 export type InquiryErrors = Partial<Record<keyof InquiryFields, string>>;
 
+/**
+ * The Server Action's return shape, and its initial value.
+ *
+ * These live here rather than next to the action itself for a hard reason: a
+ * `"use server"` module may only export async functions. Exporting this object
+ * from actions.ts builds and typechecks cleanly, then throws at runtime the
+ * first time the module is loaded — "A 'use server' file can only export async
+ * functions, found object" — which is a 500 on submit, in production, from a
+ * green build. Types are erased so they would be harmless, but they travel with
+ * the constant to keep the whole contract in one place.
+ *
+ * tests/lib/server-actions.test.ts guards this.
+ */
+export type ContactState = {
+  status: "idle" | "success" | "error";
+  /** Shown above the form when status is "error". */
+  formError?: string;
+  errors?: InquiryErrors;
+  /** Echoed back so a failed submit doesn't wipe what the visitor typed. */
+  values?: InquiryFields;
+};
+
+export const EMPTY_STATE: ContactState = { status: "idle" };
+
 /* ------------------------------------------------------------------ */
 /* Limits                                                              */
 /* ------------------------------------------------------------------ */

@@ -3,8 +3,8 @@
 import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { track } from "@vercel/analytics";
-import { submitInquiry, EMPTY_STATE } from "@/app/(site)/contact/actions";
-import { LIMITS } from "@/lib/contact";
+import { submitInquiry } from "@/app/(site)/contact/actions";
+import { LIMITS, EMPTY_STATE } from "@/lib/contact";
 import { ArrowIcon, CheckIcon } from "./Icons";
 
 /**

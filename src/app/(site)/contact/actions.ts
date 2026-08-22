@@ -8,22 +8,16 @@ import {
   validateInquiry,
   normalizeInquiry,
   renderInquiryEmail,
-  type InquiryErrors,
+  type ContactState,
   type InquiryFields,
 } from "@/lib/contact";
 import { rateLimit } from "@/lib/rate-limit";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 
-export type ContactState = {
-  status: "idle" | "success" | "error";
-  /** Shown above the form when status is "error". */
-  formError?: string;
-  errors?: InquiryErrors;
-  /** Echoed back so a failed submit doesn't wipe what the visitor typed. */
-  values?: InquiryFields;
-};
-
-export const EMPTY_STATE: ContactState = { status: "idle" };
+// NOTE: this module may export *nothing* but async functions. ContactState and
+// EMPTY_STATE therefore live in @/lib/contact — exporting the constant from
+// here typechecks and builds clean, then 500s on first submit in production.
+// See the comment on ContactState. Guarded by tests/lib/server-actions.test.ts.
 
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_PER_WINDOW = 5;
