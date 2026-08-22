@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import {
-  getAboutPage,
-  getCredentials,
-  getInterests,
-  getSiteSettings,
-} from "@/lib/sanity/fetch";
+import { getAboutPage, getCredentials, getSiteSettings } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -19,10 +14,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const [aboutPage, credentials, interests, siteSettings] = await Promise.all([
+  const [aboutPage, credentials, siteSettings] = await Promise.all([
     getAboutPage(),
     getCredentials(),
-    getInterests(),
     getSiteSettings(),
   ]);
   if (!aboutPage || !siteSettings) {
@@ -114,31 +108,13 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* ---------------- Interests ---------------- */}
-      <section className="section bg-ink-900">
-        <div className="container-x">
-          <SectionHeading
-            eyebrow="Beyond Coaching"
-            title="Health is about much more than appearance"
-            intro="Outside of coaching, these are the passions that keep me growing — and they've reinforced my belief that health is about resilience, enjoyment, confidence, physical capability, and a lifestyle that supports the life you want to live."
-          />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {interests.map((interest, i) => (
-              <Reveal key={interest.title} delay={i * 90}>
-                <div className="card-surface h-full p-7">
-                  <span className="font-display text-sm uppercase tracking-wider2 text-brand">
-                    0{i + 1}
-                  </span>
-                  <h3 className="mt-3 text-xl tracking-tightish text-cream-100">
-                    {interest.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-cream-300">{interest.detail}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* The "Beyond Coaching" interests band was removed 2026-08-22 — an
+          editorial call, not a content-readiness gate like Success Stories or
+          Resources. The CMS data (aboutPage.interests) and getInterests() are
+          both left intact, so restoring it is a matter of putting this section
+          back rather than re-entering content. Note this leaves "Personal
+          interests" as a Studio field that renders nowhere — see
+          LAUNCH-READINESS.md C3 before anyone edits it expecting it to show. */}
 
       {/* ---------------- Mission / CTA ---------------- */}
       <section className="border-t border-white/10 py-24 md:py-32">
