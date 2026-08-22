@@ -11,6 +11,7 @@ import type {
   Interest,
   Cta,
   CtaType,
+  NavVisibility,
 } from "@/content/site";
 
 import { client } from "./client";
@@ -23,6 +24,7 @@ import {
   serviceBySlugQuery,
   testimonialsQuery,
   resourcesQuery,
+  navVisibilityQuery,
 } from "./queries";
 
 /* ------------------------------------------------------------------ */
@@ -166,7 +168,24 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 
 export async function getResources(): Promise<Resource[]> {
   const r = await client.fetch<RawResource[]>(resourcesQuery, {}, fetchOpts);
-  return (r ?? []).map((x) => ({ title: x.title, summary: x.summary ?? "", category: x.category ?? "" }));
+  return (r ?? []).map((x) => ({
+    title: x.title,
+    summary: x.summary ?? "",
+    category: x.category ?? "",
+    url: x.url,
+  }));
+}
+
+export async function getNavVisibility(): Promise<NavVisibility> {
+  const r = await client.fetch<{ testimonials: number; resources: number } | null>(
+    navVisibilityQuery,
+    {},
+    fetchOpts,
+  );
+  return {
+    successStories: (r?.testimonials ?? 0) > 0,
+    resources: (r?.resources ?? 0) > 0,
+  };
 }
 
 /* ------------------------------------------------------------------ */
@@ -236,4 +255,4 @@ type RawService = {
 };
 
 type RawTestimonial = { quote: string; author: string; role?: string };
-type RawResource = { title: string; summary?: string; category?: string };
+type RawResource = { title: string; summary?: string; category?: string; url?: string };

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getResources } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ResourcesPage() {
+  // getResources returns published resources only, so this is empty until Shane
+  // ticks Published on one. Same reasoning as /success-stories.
   const resources = await getResources();
+  if (resources.length === 0) notFound();
 
   return (
     <>
@@ -42,10 +46,24 @@ export default async function ResourcesPage() {
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-cream-300">
                   {r.summary}
                 </p>
-                <span className="mt-6 inline-flex items-center gap-2 font-display text-xs uppercase tracking-wider2 text-cream-500 transition-colors group-hover:text-brand">
-                  Coming soon
-                  <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
+                {/* A published resource should go somewhere. Without a link the
+                    card is honest about it rather than pretending to be
+                    clickable. */}
+                {r.url ? (
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-2 font-display text-xs uppercase tracking-wider2 text-cream-300 transition-colors group-hover:text-brand"
+                  >
+                    Read it
+                    <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </a>
+                ) : (
+                  <span className="mt-6 inline-flex items-center gap-2 font-display text-xs uppercase tracking-wider2 text-cream-500">
+                    Coming soon
+                  </span>
+                )}
               </article>
             </Reveal>
           ))}

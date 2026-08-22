@@ -1,9 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { SiteSettings } from "@/content/site";
+import type { NavVisibility, SiteSettings } from "@/content/site";
 import { InstagramIcon, MailIcon, CreditCardIcon } from "./Icons";
 
-export function SiteFooter({ settings }: { settings: SiteSettings }) {
+export function SiteFooter({
+  settings,
+  nav,
+}: {
+  settings: SiteSettings;
+  nav: NavVisibility;
+}) {
   const instagram = settings.socialLinks.find((s) => s.platform === "instagram");
 
   return (
@@ -42,8 +48,10 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
               {[
                 { label: "About", href: "/about" },
                 { label: "Services", href: "/services" },
-                { label: "Success Stories", href: "/success-stories" },
-                { label: "Resources", href: "/resources" },
+                ...(nav.successStories
+                  ? [{ label: "Success Stories", href: "/success-stories" }]
+                  : []),
+                ...(nav.resources ? [{ label: "Resources", href: "/resources" }] : []),
                 { label: "Contact", href: "/contact" },
               ].map((l) => (
                 <li key={l.href}>

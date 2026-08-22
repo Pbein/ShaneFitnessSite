@@ -342,10 +342,18 @@ export const testimonials: Testimonial[] = [
 /* Resources (⚠️ SAMPLE — placeholder articles)                        */
 /* ------------------------------------------------------------------ */
 
+/** Which content-gated pages currently have something to show. */
+export interface NavVisibility {
+  successStories: boolean;
+  resources: boolean;
+}
+
 export interface Resource {
   title: string;
   summary: string;
   category: string;
+  /** Where the card opens. Absent = the card reads "Coming soon". */
+  url?: string;
 }
 
 export const resources: Resource[] = [

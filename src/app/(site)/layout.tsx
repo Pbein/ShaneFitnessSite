@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Oswald, Inter } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import { getSiteSettings } from "@/lib/sanity/fetch";
+import { getSiteSettings, getNavVisibility } from "@/lib/sanity/fetch";
 import { SITE_URL } from "@/lib/seo";
 import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -64,7 +64,7 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await getSiteSettings();
+  const [settings, nav] = await Promise.all([getSiteSettings(), getNavVisibility()]);
   if (!settings) throw new Error("Missing siteSettings document in the CMS");
 
   return (
@@ -76,9 +76,12 @@ export default async function SiteLayout({
           paymentLinks: settings.paymentLinks,
         }}
       >
-        <SiteHeader settings={{ logo: settings.logo, businessName: settings.businessName }} />
+        <SiteHeader
+          settings={{ logo: settings.logo, businessName: settings.businessName }}
+          nav={nav}
+        />
         <main className="flex-1">{children}</main>
-        <SiteFooter settings={settings} />
+        <SiteFooter settings={settings} nav={nav} />
       </CtaSettingsProvider>
       <Analytics />
     </div>

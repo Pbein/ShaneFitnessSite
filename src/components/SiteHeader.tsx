@@ -6,9 +6,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { CtaButton } from "./CtaButton";
 
+import type { NavVisibility } from "@/content/site";
+
 type HeaderSettings = { logo: string; businessName: string };
 
-const navLinks = [
+const ALL_NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
@@ -16,6 +18,19 @@ const navLinks = [
   { label: "Resources", href: "/resources" },
   { label: "Contact", href: "/contact" },
 ];
+
+/**
+ * Success Stories and Resources are content-gated: they leave the menu when
+ * there is nothing to show and come back on their own when Shane publishes a
+ * testimonial or a resource. See getNavVisibility.
+ */
+export function visibleNavLinks(nav: NavVisibility) {
+  return ALL_NAV_LINKS.filter(
+    (l) =>
+      (l.href !== "/success-stories" || nav.successStories) &&
+      (l.href !== "/resources" || nav.resources),
+  );
+}
 
 /** The three bars, shown as a hamburger or an X. Shared by the open and close controls. */
 function MenuIcon({ open }: { open: boolean }) {
@@ -40,8 +55,15 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-export function SiteHeader({ settings }: { settings: HeaderSettings }) {
+export function SiteHeader({
+  settings,
+  nav,
+}: {
+  settings: HeaderSettings;
+  nav: NavVisibility;
+}) {
   const pathname = usePathname();
+  const navLinks = visibleNavLinks(nav);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

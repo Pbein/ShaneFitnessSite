@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTestimonials } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CtaButton } from "@/components/CtaButton";
@@ -14,6 +15,12 @@ export const metadata: Metadata = {
 
 export default async function SuccessStoriesPage() {
   const testimonials = await getTestimonials();
+
+  // The page exists only while there is something on it. Hiding it from the nav
+  // but leaving it reachable would still let a search result or an old link land
+  // someone on an empty page — and it comes back on its own, with no code
+  // change, the moment Shane publishes a testimonial.
+  if (testimonials.length === 0) notFound();
 
   return (
     <>

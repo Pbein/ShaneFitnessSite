@@ -45,6 +45,19 @@ export const testimonialsQuery = groq`*[_type == "testimonial"] | order(order as
   quote, author, role
 }`;
 
-export const resourcesQuery = groq`*[_type == "resource"] | order(order asc){
-  title, summary, category
+export const resourcesQuery = groq`*[_type == "resource" && published == true] | order(order asc){
+  title, summary, category, url
+}`;
+
+/**
+ * Drives which pages exist in the nav, the footer and the sitemap.
+ *
+ * Both pages are content-gated rather than toggled: Success Stories appears the
+ * moment a testimonial is published, Resources the moment a resource is. A
+ * boolean the owner could tick independently of the content would let an empty
+ * page back onto the live site, which is exactly what this replaced.
+ */
+export const navVisibilityQuery = groq`{
+  "testimonials": count(*[_type == "testimonial"]),
+  "resources": count(*[_type == "resource" && published == true])
 }`;

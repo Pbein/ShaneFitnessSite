@@ -85,19 +85,34 @@ Pushing was therefore both the backup and the fix.
 The live contact form mails Shane again rather than the visitor. Note the previous
 production deploy was two days old, consistent with the finding.
 
-### B3. Success Stories is an empty page, in the main nav and the sitemap
+### B3. ~~Success Stories is an empty page~~ — RESOLVED 2026-08-21
 
 The CMS has zero `testimonial` documents. `/success-stories` renders a heading, then
 a 160–224px band of nothing where the grid would be, then a footer. The homepage
 already guards this (its testimonial band is gated on `testimonials.length > 0`); the
 dedicated page does not. It is linked from the header, the footer, and
-`sitemap.xml`. See §4 — this needs a decision from Shane, not just code.
+`sitemap.xml`.
 
-### B4. Resources is three dead teasers
+**Done.** Both this and B4 are now **content-gated rather than toggled**: the page
+leaves the nav, the footer and the sitemap when there is nothing to show, and returns
+on its own the moment a testimonial is published. Visiting it directly while hidden
+returns the branded 404 rather than an empty page, so an old link or a stale search
+result can't land anyone on a void. A boolean the owner could tick independently of
+the content would have let an empty page back onto the live site — which is the exact
+failure being fixed — so there is no toggle to forget.
+
+### B4. ~~Resources is three dead teasers~~ — RESOLVED 2026-08-21
 
 Three `resource` documents render as cards ending in a non-clickable "Coming soon →".
 There is no body field and no detail route, so there is nothing to click through to.
-Also in the header, footer, and sitemap. Same call as B3 — see §4.
+Also in the header, footer, and sitemap.
+
+**Done**, the same way as B3, plus the two fields that make restoring it safe: the
+`resource` schema gains **Published** (the gate) and **Link** (a destination). The page
+appears when at least one resource is published, and a card with a link now reads
+"Read it" and opens it instead of saying "Coming soon" and going nowhere. The Published
+field's description in the Studio says not to tick it until the resource has a link,
+so turning the page back on can't restore the original defect.
 
 ### B5. Domain, `NEXT_PUBLIC_SITE_URL`, and the redeploy that has to follow
 
@@ -267,35 +282,28 @@ rather than guess between DC, Maryland and Virginia.
 These are content decisions, not code. He hasn't trained clients through the site
 yet, so the honest answer is that some of this content doesn't exist yet.
 
-### Success Stories (`/success-stories`) — B3
+### Success Stories (`/success-stories`) — decided: hidden, self-restoring
 
-Zero testimonials. Options, in the order I'd suggest them:
+Hidden for launch (see B3). Nothing more is needed in code — publishing a testimonial
+in the Studio brings the page, the nav link, the footer link and the sitemap entry
+back within the ISR window.
 
-1. **Hide the page for launch.** Remove it from `navLinks` (`SiteHeader.tsx`), the
-   footer, and `PUBLIC_ROUTES` (`src/lib/seo.ts`). Restore it the moment he has two
-   or three real quotes. The homepage band already reappears by itself when a
-   testimonial is published — the same gating should exist here.
-2. **Reframe as founding clients.** Keep the page, replace the empty grid with an
-   honest "I'm taking on my first coaching clients — your story could be the first
-   one here" panel. Works only if the copy is genuinely upfront about it.
-3. **Use his own story.** He has a transformation of his own (it's already the
-   `/about` narrative). A single first-person case study is real content and beats
-   an empty grid.
+Still worth deciding with Shane: whether to reframe the page around founding clients,
+or to lead it with his own transformation story, once he has something to put there.
 
 **Also needed: a way to collect them.** Two or three sentences asked for at the end
 of week 4, in writing, with permission to publish and a first name + role. Worth
 agreeing the ask now so the page fills in six weeks instead of never.
 
-### Resources (`/resources`) — B4
+### Resources (`/resources`) — decided: hidden, self-restoring
 
-Three teasers with nowhere to go. Options:
+Hidden for launch (see B4). To bring it back, Shane adds a **Link** to a resource and
+ticks **Published**. The three existing teasers stay unpublished until they point
+somewhere.
 
-1. **Hide the page for launch** (same three places as above). Cleanest — an empty
-   content section on a brand-new site costs more credibility than it buys.
-2. **Write the three posts.** Needs a `body` field on the `resource` schema and a
-   `/resources/[slug]` route. Realistically a post-launch job, not a Saturday one.
-3. **Point them somewhere real** — an Instagram post or a PDF. Needs an honest link
-   instead of "Coming soon".
+Still open, and a post-launch job rather than a Saturday one: hosting the writing on
+the site itself would need a `body` field plus a `/resources/[slug]` route. Linking out
+to Instagram or a PDF needs neither.
 
 ### Home page hero image
 
