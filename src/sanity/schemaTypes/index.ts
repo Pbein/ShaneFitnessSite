@@ -15,6 +15,7 @@ import { aboutPage } from "./documents/aboutPage";
 import { service } from "./documents/service";
 import { testimonial } from "./documents/testimonial";
 import { resource } from "./documents/resource";
+import { ownerTask } from "./documents/ownerTask";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // objects
@@ -31,6 +32,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   service,
   testimonial,
   resource,
+  ownerTask,
 ];
 
 /** Document types that should exist exactly once (enforced in structure + config). */

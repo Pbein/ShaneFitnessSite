@@ -8,6 +8,76 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
     .items([
+      // Shane's private to-do list, first because it is the thing he is most
+      // likely to be opening the Studio for. Split by state rather than shown
+      // as one list: a finished task scrolling past every visit makes the list
+      // feel longer the more work you do, which is the wrong incentive.
+      S.listItem()
+        .title("📋 To-Do List")
+        .child(
+          S.list()
+            .title("To-Do List")
+            .items([
+              S.listItem()
+                .title("🔥 Do first")
+                .child(
+                  S.documentList()
+                    .title("Do first")
+                    .filter('_type == "ownerTask" && done != true && priority == "1"')
+                    .defaultOrdering([{ field: "category", direction: "asc" }]),
+                ),
+              S.listItem()
+                .title("⬜ Everything still to do")
+                .child(
+                  S.documentList()
+                    .title("Still to do")
+                    .filter('_type == "ownerTask" && done != true')
+                    .defaultOrdering([
+                      { field: "priority", direction: "asc" },
+                      { field: "category", direction: "asc" },
+                    ]),
+                ),
+              S.listItem()
+                .title("✅ Done")
+                .child(
+                  S.documentList()
+                    .title("Done")
+                    .filter('_type == "ownerTask" && done == true')
+                    .defaultOrdering([{ field: "category", direction: "asc" }]),
+                ),
+              S.divider(),
+              S.listItem()
+                .title("By category")
+                .child(
+                  S.list()
+                    .title("By category")
+                    .items(
+                      (
+                        [
+                          ["gbp", "Google Business Profile"],
+                          ["ads", "Google Ads"],
+                          ["reviews", "Reviews"],
+                          ["social", "Instagram & Social"],
+                          ["website", "Website"],
+                          ["admin", "Business admin"],
+                        ] as const
+                      ).map(([value, title]) =>
+                        S.listItem()
+                          .id(value)
+                          .title(title)
+                          .child(
+                            S.documentList()
+                              .title(title)
+                              .filter('_type == "ownerTask" && category == $category')
+                              .params({ category: value })
+                              .defaultOrdering([{ field: "priority", direction: "asc" }]),
+                          ),
+                      ),
+                    ),
+                ),
+            ]),
+        ),
+      S.divider(),
       S.listItem()
         .title("Site Settings")
         .id("siteSettings")

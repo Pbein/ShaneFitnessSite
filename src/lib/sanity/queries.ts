@@ -2,7 +2,11 @@ import { groq } from "next-sanity";
 
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   businessName, tagline, email, phone, serviceArea,
-  socialLinks[]{ platform, url },
+  // Hidden links are filtered here rather than in the component, so a link that
+  // is switched off never reaches the browser at all. \`visible\` is absent on
+  // links created before the field existed, and \`null != false\` is true in
+  // GROQ, so those keep showing — the field only ever hides on an explicit no.
+  socialLinks[visible != false]{ platform, url },
   bookingUrl, essentialBookingUrl, premiumBookingUrl, inPersonBookingUrl, primaryPaymentLink,
   paymentLinks[]{ label, url },
   manageSubscriptionUrl,
