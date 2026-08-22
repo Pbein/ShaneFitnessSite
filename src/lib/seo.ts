@@ -13,4 +13,6 @@ export const PUBLIC_ROUTES = [
   "/success-stories",
   "/resources",
   "/contact",
+  "/privacy",
+  "/terms",
 ] as const;

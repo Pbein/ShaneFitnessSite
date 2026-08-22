@@ -47,6 +47,37 @@
   .section {
     @apply py-20 md:py-28;
   }
+
+  /* Long-form policy copy (privacy, terms). The rest of the site is display
+     type over short blocks; these are the only pages anyone actually reads
+     top to bottom, so they get a measure and a rhythm of their own. */
+  .legal-prose {
+    @apply max-w-2xl text-cream-300;
+  }
+  .legal-prose h2 {
+    @apply mb-4 mt-12 text-xl text-cream-100 md:text-2xl;
+  }
+  .legal-prose h2:first-child {
+    @apply mt-0;
+  }
+  .legal-prose h3 {
+    @apply mb-3 mt-8 font-display text-sm uppercase tracking-wider2 text-cream-500;
+  }
+  .legal-prose p {
+    @apply mb-4 text-[15px] leading-relaxed;
+  }
+  .legal-prose ul {
+    @apply mb-4 space-y-2 pl-5;
+  }
+  .legal-prose li {
+    @apply list-disc text-[15px] leading-relaxed marker:text-brand;
+  }
+  .legal-prose a {
+    @apply text-cream-100 underline decoration-brand/60 underline-offset-2 transition-colors hover:text-brand;
+  }
+  .legal-prose strong {
+    @apply font-semibold text-cream-100;
+  }
 }
 
 /* Reveal-on-scroll utility (driven by Reveal component).

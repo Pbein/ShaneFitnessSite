@@ -93,12 +93,28 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-cream-500 md:flex-row md:items-center md:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-cream-500 md:flex-row md:items-center md:justify-between">
           <p>
             © {/* year set at build */}
             {new Date().getFullYear()} {settings.businessName}. All rights reserved.
           </p>
-          <p>NASM Certified Personal Trainer · M.S. Health Promotion Management</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <Link
+              href="/privacy"
+              className="py-2 transition-colors hover:text-brand"
+            >
+              Privacy
+            </Link>
+            <Link href="/terms" className="py-2 transition-colors hover:text-brand">
+              Terms
+            </Link>
+            <span className="hidden md:inline">
+              NASM Certified Personal Trainer · M.S. Health Promotion Management
+            </span>
+          </div>
+          <p className="md:hidden">
+            NASM Certified Personal Trainer · M.S. Health Promotion Management
+          </p>
         </div>
       </div>
     </footer>

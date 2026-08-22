@@ -52,6 +52,8 @@ const ROUTE_TO_MODULE: Record<string, string> = {
   "/success-stories": "../../src/app/(site)/success-stories/page",
   "/resources": "../../src/app/(site)/resources/page",
   "/contact": "../../src/app/(site)/contact/page",
+  "/privacy": "../../src/app/(site)/privacy/page",
+  "/terms": "../../src/app/(site)/terms/page",
 };
 
 async function metadataOf(modulePath: string): Promise<Metadata> {
