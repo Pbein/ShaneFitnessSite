@@ -155,11 +155,42 @@ route, tests and typecheck clean, build clean.
 
 ## 3. Should fix before or shortly after launch
 
-**S1 — Stripe → `/welcome` has never been tested with a real card.** The three
-Payment Links' after-payment redirects are configured in the Stripe dashboard, not
-in this repo, and they point at the current `vercel.app` host. They must be
-re-pointed at the new domain (§6) and then walked end-to-end once with a real card
-and a refund. This is the buying flow; it is the one path that must not be assumed.
+**S1 — Stripe redirects are correctly configured; only the hostname is wrong.**
+Checked in the dashboard 2026-08-21. All three Payment Links already redirect to
+`/welcome` with the exact `plan` value the page expects:
+
+| Link | Confirmation page |
+|---|---|
+| In Person, $100 one-time | `https://shane-fitness-site.vercel.app/welcome?plan=in-person` |
+| Essential, $199/mo | `https://shane-fitness-site.vercel.app/welcome?plan=essential` |
+| Premium, $349/mo | `https://shane-fitness-site.vercel.app/welcome?plan=premium` |
+
+Those match the `PLAN_COPY` keys in `src/lib/welcome.ts` exactly — right case, right
+hyphenation, right link. So this is a find-and-replace of the hostname after DNS
+resolves, not a repair. Worth having checked: a wrong `plan` value fails silently
+(200, plausible copy, and the free-consultation Calendly instead of that tier's own
+event), and Stripe's default "show confirmation page" would have skipped `/welcome`
+entirely, so a paying client would never have been prompted to book.
+
+**Still genuinely untested: the flow itself.** Configuration being right is not the
+same as the path working. One real-card purchase is still needed to observe that
+Stripe fires the redirect, the receipt arrives, and the Calendly booking produces an
+actual invite. Use the $100 link — cheapest, one-time, nothing to unwind — then
+refund it. The two subscription tiers' copy and Calendly events can be checked for
+free by opening `/welcome?plan=essential` and `?plan=premium` directly.
+
+**S1a — Turn on "Collect terms of service agreement" on all three links.** Currently
+`No`. Now that `/terms` exists, Stripe can show a checkbox linking to it at checkout
+and record the acceptance against the payment. For recurring subscriptions with a
+stated cancellation policy, agreement at the point of sale is worth considerably more
+than a footer link.
+
+**S1b — For Shane, not for the site: "Collect tax automatically" is `Yes` while
+"Collect addresses" is `None required`.** Stripe Tax needs a location to calculate
+anything and falls back to IP geolocation without an address, and it only collects
+where a tax obligation has been registered. So this is either correctly set up or
+switched on and doing nothing. A question for him or his accountant, flagged rather
+than answered.
 
 **S2 — No branded error or 404 page.** There is no `not-found.tsx` and no
 `error.tsx`. A bad URL gets Next's bare default with no header, nav, or way back.
@@ -365,9 +396,11 @@ Order matters — several of these bake values into a static build.
    environment. Confirm `SANITY_REVALIDATE_SECRET` is also set (S3).
 4. **Redeploy.** Non-negotiable: canonicals, `robots.txt`, `sitemap.xml`, and OG URLs
    are baked into the static HTML at build time. The env var alone changes nothing.
-5. **Re-point the three Stripe Payment Link redirects** at
-   `https://<domain>/welcome?plan=…` (S1), and the `manageSubscriptionUrl` portal
-   return URL.
+5. **Swap the hostname on the three Stripe Payment Link redirects.** The paths and
+   `plan` values are already correct (S1) — only `shane-fitness-site.vercel.app`
+   changes to the new domain. Also update the Customer portal return URL (Settings →
+   Billing → Customer portal), and while in there switch on "Collect terms of service
+   agreement" pointing at `https://<domain>/terms`.
 6. **Walk the money path on the real domain**: buy the cheapest tier with a real
    card → land on `/welcome` → book the Calendly slot → confirm the calendar invite
    arrives → refund the charge. Then the same for the free-consultation booking.
