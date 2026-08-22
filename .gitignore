@@ -45,3 +45,8 @@ next-env.d.ts
 
 
 .vercel
+
+.env*
+
+# Local audit output (scripts/audit-site.mjs)
+tmp/

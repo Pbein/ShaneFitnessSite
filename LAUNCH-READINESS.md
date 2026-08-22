@@ -35,7 +35,16 @@ URL in the CMS returns 200.
 
 ## 1. Blockers — must be resolved before Sunday
 
-### B1. The contact form does not send anything, to anyone
+### B1. ~~The contact form does not send anything, to anyone~~ — RESOLVED 2026-08-22
+
+**Done.** Replaced with a Server Action that sends through Resend (provisioned via
+the Vercel Marketplace, Free plan) and returns a real result. Validation, honeypot,
+rate limiting, HTML escaping, `replyTo` set to the visitor, and an idempotency key
+so a double-click sends one email. Works with JavaScript disabled. 80 tests pass.
+**Full write-up and the reasoning behind each decision: `docs/CONTACT-FORM.md`.**
+
+The original diagnosis, kept because it is why the fix looks the way it does:
+
 
 `ContactForm.tsx` sets `window.location.href` to a `mailto:` link and then shows
 "Your email app should have opened…" **unconditionally** — it never checks, because
@@ -114,7 +123,18 @@ appears when at least one resource is published, and a card with a link now read
 field's description in the Studio says not to tick it until the resource has a link,
 so turning the page back on can't restore the original defect.
 
-### B5. Domain, `NEXT_PUBLIC_SITE_URL`, and the redeploy that has to follow
+### B5. ~~Domain, `NEXT_PUBLIC_SITE_URL`, and the redeploy that has to follow~~ — RESOLVED 2026-08-22
+
+**Done.** `trainshane.com` is live: registered at Cloudflare on Shane's own account,
+both hostnames on Vercel, `www` 308-redirecting to the apex with the path preserved,
+certificates issued. `NEXT_PUBLIC_SITE_URL` set for Production and the site
+**redeployed** — verified live that canonicals, `og:url`, `robots.txt` and
+`sitemap.xml` all now carry the new host. Full runbook, DNS values, and the
+verification commands: **`docs/DOMAIN-GO-LIVE.md`**.
+
+The original analysis, kept because the static-build trap it describes is the thing
+that will bite again on any future hostname change:
+
 
 `src/lib/seo.ts` falls back to `https://shane-fitness-site.vercel.app` when
 `NEXT_PUBLIC_SITE_URL` is unset — and `vercel env ls` confirms it **is** unset in
@@ -365,7 +385,11 @@ needs re-checking after any change.
 
 ---
 
-## 5. Open decision: the contact form backend (B1)
+## 5. ~~Open decision: the contact form backend (B1)~~ — DECIDED AND BUILT 2026-08-22
+
+**Resend, provisioned through the Vercel Marketplace, wired to a Server Action.**
+See `docs/CONTACT-FORM.md`. Everything below was the reasoning at the time and is
+kept only as a record of it.
 
 Needs picking before it can be built. The shape is the same either way: a Next.js
 route handler that validates the payload, sends Shane a notification email, and
