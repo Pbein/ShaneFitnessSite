@@ -49,7 +49,15 @@
   }
 }
 
-/* Reveal-on-scroll utility (driven by Reveal component) */
+/* Reveal-on-scroll utility (driven by Reveal component).
+   Everything below the hero starts at opacity 0 and is un-hidden by JS, so
+   without a fallback a scripting failure leaves the page looking empty. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 .reveal {
   opacity: 0;
   transform: translateY(20px);

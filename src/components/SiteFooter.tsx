@@ -35,7 +35,10 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
           {/* Explore */}
           <div>
             <h4 className="mb-4 text-sm tracking-wider2 text-cream-500">Explore</h4>
-            <ul className="space-y-2.5 text-sm">
+            {/* py-2 on the links, not gaps on the list: most of this traffic is
+                phones off Instagram, and a 15px-tall text line is well under the
+                44px minimum tap target. */}
+            <ul className="text-sm">
               {[
                 { label: "About", href: "/about" },
                 { label: "Services", href: "/services" },
@@ -44,7 +47,10 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
                 { label: "Contact", href: "/contact" },
               ].map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-cream-300 transition-colors hover:text-brand">
+                  <Link
+                    href={l.href}
+                    className="inline-block py-2 text-cream-300 transition-colors hover:text-brand"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -57,9 +63,9 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
             <h4 className="mb-4 text-sm tracking-wider2 text-cream-500">Get in touch</h4>
             <a
               href={`mailto:${settings.email}`}
-              className="flex items-center gap-2 text-sm text-cream-300 transition-colors hover:text-brand"
+              className="flex items-center gap-2 py-2 text-sm text-cream-300 transition-colors hover:text-brand"
             >
-              <MailIcon className="h-4 w-4" />
+              <MailIcon className="h-4 w-4 shrink-0" />
               {settings.email}
             </a>
             {instagram && (
@@ -67,9 +73,9 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
                 href={instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 flex items-center gap-2 text-sm text-cream-300 transition-colors hover:text-brand"
+                className="flex items-center gap-2 py-2 text-sm text-cream-300 transition-colors hover:text-brand"
               >
-                <InstagramIcon className="h-4 w-4" />
+                <InstagramIcon className="h-4 w-4 shrink-0" />
                 Instagram
               </a>
             )}
@@ -78,9 +84,9 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
                 href={settings.manageSubscriptionUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 flex items-center gap-2 text-sm text-cream-300 transition-colors hover:text-brand"
+                className="flex items-center gap-2 py-2 text-sm text-cream-300 transition-colors hover:text-brand"
               >
-                <CreditCardIcon className="h-4 w-4" />
+                <CreditCardIcon className="h-4 w-4 shrink-0" />
                 Manage subscription
               </a>
             )}

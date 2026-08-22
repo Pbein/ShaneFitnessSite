@@ -49,9 +49,10 @@ export async function generateMetadata(): Promise<Metadata> {
       description: settings.seo.description,
       images: [ogImage.url],
     },
-    icons: {
-      icon: settings.logo,
-    },
+    // No `icons` here on purpose: declaring one overrides Next's file convention,
+    // which is what serves src/app/icon.png and src/app/apple-icon.png. Pointing
+    // the favicon at the Sanity CDN also meant an unsized remote fetch for a
+    // 16px tab icon, and gave bookmarks/home-screen saves nothing to use.
   };
 }
 
