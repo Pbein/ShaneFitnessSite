@@ -55,18 +55,26 @@ export default async function HomePage() {
             left-to-right scrim crushed it to near-invisible. */}
         <div className="absolute inset-0 -z-10">
           <Image
-            src="/images/hero-shane-gym.png"
-            alt="Shane in the gym, seated beside a loaded barbell"
+            src="/images/hero-gym-room.jpg"
+            alt=""
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[68%_center] md:object-center"
+            className="object-cover object-[72%_center] md:object-center"
           />
-          {/* Narrow screens crop in on Shane, so the headline needs a flat scrim
-              over him. Wide screens don't — the wall is already behind the text. */}
-          <div className="absolute inset-0 bg-ink-950/60 md:bg-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/70 to-ink-950/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-transparent to-transparent" />
+          {/* A room rather than a portrait, so nothing here is a subject that can
+              be cropped badly — the treatment just has to hold the headline and
+              stop the warm lighting fighting the charcoal palette. */}
+          {/* Narrow screens put the text over the middle of the room, so they
+              need a flat scrim; wide screens keep the right side almost clear,
+              because the point of a photograph is to be visible. */}
+          <div className="absolute inset-0 bg-ink-950/40 md:bg-ink-950/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/60 to-transparent" />
+          {/* The previous hero ended in a hard horizontal line where the section
+              stopped, because the fade had gone transparent by halfway up.
+              Carrying ink-950 further lands the bottom edge on the page's own
+              background, so there is no seam to see. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-950 from-4% via-ink-950/45 via-38% to-transparent" />
         </div>
 
         <div className="container-x flex min-h-[88vh] flex-col justify-center py-28">
