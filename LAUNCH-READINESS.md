@@ -15,15 +15,18 @@ Stripe fire the redirect, the receipt land, and Calendly produce an actual invit
 Planned for 2026-08-22/23 with Shane. Until then, treat "clients can buy" as
 probable rather than proven.
 
-**Live since launch:** Shane is running Google Ads at $3/day, and there is **no
-conversion tracking on the site**, so that spend currently produces no data — see
-§8.
+**Live since launch:** Shane is running Google Ads at $3/day. Conversion tracking
+is now built and the Google tag is live sitewide; the one value still outstanding
+is the Conversion Label, without which the tag loads but reports nothing. Shane
+configures it himself in Site Settings — no deploy. See §8.4.
 
-Companion documents, both current:
+Companion documents, all current:
 - **`docs/DOMAIN-GO-LIVE.md`** — the domain runbook and everything that was done
   to it, including the Sanity CORS step that only surfaced after go-live.
 - **`docs/CONTACT-FORM.md`** — how the form works and why each decision went the
   way it did.
+- **§8 below** — everything that happened after go-live: CORS, the Instagram
+  toggle, Shane's private Studio to-do list, and Google Ads.
 
 ---
 
@@ -552,29 +555,49 @@ which would cost the listing entirely. The task instead asks people he has
 and states plainly why the shortcut isn't worth it, along with the legitimate
 version: train a few people free or discounted first, then ask.
 
-### 8.4 Google Ads is live and unmeasured — the current top priority
+### 8.4 Google Ads — tracking built 2026-08-22, one value outstanding
 
-Shane started Google Ads at **$3/day** as soon as the site went live. Two problems,
-both live right now:
+**Built and deployed.** The Google tag is live sitewide (`AW-18405198316`,
+confirmed rendering on every route), and conversions fire on things worth paying
+for: a contact-form submission only after the Server Action confirms the email
+actually sent, and `/welcome` on arrival, since reaching it means Stripe took
+payment. See `docs/CONTACT-FORM.md` and `src/lib/analytics.ts`.
 
-1. **No conversion tracking exists on this site.** There is no Google tag, and
-   nothing reports a contact-form submission back to Ads. So there is no way to
-   tell a keyword that produces clients from one that produces nothing, and
-   Google's bidding has no conversion signal to optimise toward — it optimises for
-   cheap clicks instead, which is not what he's buying. At $3/day that's roughly
-   $90/month spent blind.
-2. **Location targeting is very likely still on Google's default**, "Presence or
-   interest", which shows ads to people merely *interested in* the area rather than
-   in it. The setting is hidden behind a collapsed "Location options" link, so it
-   stays on the default unless someone deliberately changed it.
+**Configured from the CMS, deliberately.** Site Settings → "Google Ads conversion
+tracking". Values are read through ISR on a 60s window, so Shane can turn tracking
+on or change it himself in about a minute with no rebuild and nobody in the loop.
+A `NEXT_PUBLIC_` env var would have been baked in at build time and needed a
+redeploy every time — the same static-build trap as B5.
 
-Both are tasks in the Studio list (`ads-conversion-tracking`, `ads-location-targeting`).
-The website half of #1 — adding the Google tag and firing a conversion event on a
-*successful* form send, not a page view — **is not built and is the most valuable
-remaining piece of work on the site.** It needs the Conversion ID and Label from
-Shane's Ads account first.
+**Off unless configured.** With the Conversion ID empty the tag component returns
+null: no script, no request to Google, no cookie. Verified against the built
+output before the ID was set.
 
-Worth setting expectations alongside it: at typical personal-training click costs,
-$3/day buys roughly one click a day. One inquiry every two to three weeks is a
-normal result at that spend, and judging it sooner will lead to switching things
-off before they've shown anything.
+**The ID is interpolated into an inline `<script>`, so its format is a security
+boundary**, not a nicety — a CMS field reaching an inline script is a
+script-injection vector. Enforced in one pure function, re-checked at the point of
+use, and tested against breakout attempts. Sanity's own field validation is
+convenience for Shane; it can be bypassed by writing to the API directly.
+
+**Still outstanding: the Conversion Label.** The ID alone loads the tag but reports
+nothing — both halves are needed. Shane is retrieving it from the event snippet in
+Google Ads.
+
+**A trap worth recording.** Google Ads' setup flow defaulted the data source to an
+auto-created Google Analytics property (`551166418`) rather than the Google tag.
+There is no Analytics code on this site, so that property has never received an
+event — completing setup that way would have wired the conversion action to an
+empty source, reported zero conversions forever, and looked exactly like ads that
+do not work. Verified by checking the live site for any Google tag before advising.
+The fix is "Edit data sources" → tick **Google tag**, untick the Analytics
+property.
+
+**Also still worth doing: location targeting.** Google's default is "Presence or
+interest", hidden behind a collapsed "Location options" link, which spends budget
+on people merely interested in the area. Task `ads-location-targeting` in the
+Studio.
+
+Expectation setting, unchanged: at typical personal-training click costs, $3/day
+buys roughly one click a day. One inquiry every two to three weeks is a normal
+result, and judging it sooner leads to switching things off before they have shown
+anything.

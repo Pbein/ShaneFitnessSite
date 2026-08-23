@@ -13,8 +13,17 @@ import { isValidConversionId } from "@/lib/analytics";
  * /welcome, both of which are many seconds after first paint.
  *
  * Server component on purpose — the ID comes from the CMS via the layout, so
- * the tag is in the initial HTML and there is no client-side round trip to
- * decide whether tracking exists.
+ * whether tracking exists at all is decided on the server, with no client-side
+ * round trip and nothing shipped when it is switched off.
+ *
+ * Note what that does *not* mean: with `afterInteractive`, the served HTML
+ * carries a preload hint plus the script's description in the RSC payload, and
+ * React injects the real element after hydration. There is no literal
+ * `<script src="...googletagmanager...">` in the raw HTML. That is fine —
+ * Google's site scanner executes JavaScript and reports the tag as "Installed
+ * on site" (confirmed in the Ads UI on 2026-08-22). Rendering plain `<script>`
+ * tags from this server component was tried as an alternative and produced the
+ * same RSC-payload output, so it bought nothing.
  */
 export function GoogleAdsTag({ conversionId }: { conversionId?: string }) {
   // Re-validated here rather than trusted from the caller: this value is
