@@ -77,6 +77,47 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
+      // Answers rather than tasks. Kept separate from the to-do list on purpose:
+      // Shane said he felt overwhelmed, and the worst way to answer "do I need
+      // an LLC?" is to add six more checkboxes. Most of these end in "so you can
+      // ignore this for now", which a checklist cannot say.
+      S.listItem()
+        .title("📖 Guides & Answers")
+        .child(
+          S.list()
+            .title("Guides & Answers")
+            .items([
+              S.listItem()
+                .title("⭐ Read in order")
+                .child(
+                  S.documentList()
+                    .title("Read in order")
+                    .filter('_type == "ownerGuide"')
+                    .defaultOrdering([{ field: "order", direction: "asc" }]),
+                ),
+              S.divider(),
+              ...(
+                [
+                  ["start-here", "⭐ Start here"],
+                  ["business-setup", "Business setup (LLC)"],
+                  ["insurance", "Insurance & safety"],
+                  ["getting-clients", "Getting your first clients"],
+                  ["money", "Money, pricing & tax"],
+                ] as const
+              ).map(([value, title]) =>
+                S.listItem()
+                  .id(`guide-${value}`)
+                  .title(title)
+                  .child(
+                    S.documentList()
+                      .title(title)
+                      .filter('_type == "ownerGuide" && category == $category')
+                      .params({ category: value })
+                      .defaultOrdering([{ field: "order", direction: "asc" }]),
+                  ),
+              ),
+            ]),
+        ),
       S.divider(),
       S.listItem()
         .title("Site Settings")
