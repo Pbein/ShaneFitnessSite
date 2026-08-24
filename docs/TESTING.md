@@ -44,6 +44,14 @@ edits content.
   manage-subscription link (asserted only when the CMS field is set).
 - `e2e/services.spec.ts` — service cards render and their CTAs point outward to
   `buy.stripe.com` / `calendly.com` / `billing.stripe.com` (never `#`).
+- `e2e/hero.spec.ts` — the hero, at the nine widths in `docs/HERO-BRIEF.md` §11.
+  Measures real WCAG contrast for the headline and subheadline by screenshotting
+  each twice (text shown, text hidden), diffing to find the exact glyph pixels,
+  and reading the backdrop beneath them; asserts the 5th percentile clears
+  4.5:1. Also asserts the art-directed `<picture>` serves the sign-free plate
+  below 768px, the branded one above, and **exactly one** of them per load.
+  Read the scope note in `HERO-BRIEF.md` §11 before trusting it — the contrast
+  half does not catch every kind of unreadable hero.
 
 > **Requires CMS connectivity.** `/welcome` and `/services` fetch `siteSettings`
 > from Sanity and throw if it's missing. The dev server reads `.env.local` for

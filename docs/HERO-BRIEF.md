@@ -288,6 +288,33 @@ observed being served a 1280px candidate.
 
 ---
 
+## 10a. What actually shipped, 2026-08-23
+
+The split in §10 is now in place, at `md` (768px) rather than `lg`, and with one
+change of emphasis worth recording: **it was not shot as a portrait mobile crop.**
+§8 asks for 1200×2000. What existed was a second render of the same room at
+1920×1080 with the painted TRAIN SHANE sign removed, and cropping that to portrait
+would have meant upscaling a 608px-wide slice. Serving the landscape plate and
+letting `object-cover` crop it keeps the pixels honest. §8 stands as the spec for
+a future shoot; it is not what is on the site today.
+
+Both plates are resolved through `getImageProps` and composed into a `<picture>`.
+Two `<Image>` elements toggled with `hidden md:block` would have been simpler and
+wrong: a display:none image is still fetched, so every phone would have paid for
+the desktop plate as well. Note that `priority` is inert through `getImageProps` —
+the preload is issued from inside the real `<Image>` component, and the returned
+props carry `fetchPriority: undefined`. The two `media`-scoped
+`<link rel="preload">` tags in `page.tsx` exist to put that back; delete them and
+the hero silently stops being preloaded.
+
+**Why the split was needed at all is not what §1 predicts.** The reported defect
+was the headline sitting on top of the painted wall sign on a phone — and that is
+a *legibility* failure, not a *luminance* one. The sign is dark text on a dark
+wall; the white headline over it still measures 12:1. See §11 for what follows
+from that.
+
+---
+
 ## 11. How to know it worked
 
 `scripts/audit-site.mjs` covers layout. For contrast specifically, the method used
@@ -309,6 +336,37 @@ penalises text that does not fill its box.
 
 Current state for reference — passing, but only because the scrim is doing heavy
 lifting: headline 12.2–15.5:1, subheadline 5.9–8.6:1.
+
+### This is now automated — and here is exactly what it does not cover
+
+`e2e/hero.spec.ts` runs the method above on every width in the table, on each
+`npm run test:e2e`. No more measuring by hand.
+
+**But the contrast suite did not catch the bug that prompted the §10a split, and
+would not catch it again.** This was verified rather than assumed: with the
+branded plate deliberately wired back onto phones — the exact defect, headline
+sitting across the painted sign — all nine widths still passed comfortably.
+
+The reason is that WCAG contrast measures *luminance* between glyph and backdrop.
+The sign is dark-on-dark, so a white headline over it measures fine. What makes it
+unreadable is two sets of letterforms occupying the same pixels: **visual
+interference, which contrast is blind to by construction.**
+
+A backdrop "busyness" metric was tried as a replacement — mean |Laplacian| under
+the glyphs, on the theory that text-on-text reads as high edge energy. It was
+rejected on the numbers. Across 375/390/440 the broken and fixed versions differed
+by roughly 4.3 → 3.8, and at 440 the *fixed* version scored higher than the broken
+one. Any threshold drawn through that would be a number invented to pass, not a
+measurement. It is not in the suite.
+
+So the guard against text-on-text is the blunt one, in the same spec: **assert
+which plate each breakpoint loads.** It fails loudly if a phone is ever pointed at
+the branded frame again. It is narrow and it is honest about being narrow.
+
+**The standing implication: contrast is necessary, not sufficient. A green suite
+means the hero is not too bright. It does not mean the hero reads well. Anything
+placed behind the copy that has structure of its own — a sign, a logo, a face, a
+barbell crossing the baseline — still needs a human to look at it.**
 
 ---
 

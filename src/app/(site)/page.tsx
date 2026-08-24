@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import type { Service } from "@/content/site";
 import {
@@ -22,6 +22,19 @@ import { CheckIcon } from "@/components/Icons";
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
+
+// The two hero plates, resolved through the image optimizer at build time so the
+// <picture> below still gets AVIF/WebP and per-width candidates. Module scope
+// because both are static files — nothing here depends on the request.
+const HERO_IMAGE = { alt: "", fill: true, priority: true, sizes: "100vw" } as const;
+const { props: heroMobile } = getImageProps({
+  ...HERO_IMAGE,
+  src: "/images/hero-gym-room-mobile.jpg",
+});
+const { props: heroDesktop } = getImageProps({
+  ...HERO_IMAGE,
+  src: "/images/hero-gym-room.jpg",
+});
 
 export default async function HomePage() {
   const [homepage, services, credentials, testimonials, siteSettings] =
@@ -50,16 +63,54 @@ export default async function HomePage() {
             the CMS field once that freeze lifts, so Shane can swap it himself.
 
             A room rather than a portrait, so there is no subject to crop badly at
-            any width, and it is branded — the TRAIN SHANE sign is in frame. */}
+            any width, and it is branded — the TRAIN SHANE sign is in frame.
+
+            Two sources, art-directed at md, per docs/HERO-BRIEF.md §10. Below md
+            the copy spans 6%–94% of the width and `object-cover` throws away ~70%
+            of a landscape frame, so the crop window lands squarely on the painted
+            TRAIN SHANE sign — headline over wall text, which no scrim can fix
+            because the problem is legibility, not luminance. The mobile plate is
+            the same render with the sign removed, so the composition Shane signed
+            off on is unchanged; only the competing text is gone. From md up the
+            copy clears the sign and the branded frame is served untouched.
+
+            <picture> rather than two <Image>s on purpose: a `hidden md:block`
+            image is still fetched by the browser, so phones would download both
+            plates. getImageProps keeps the optimizer (AVIF/WebP, per-width
+            candidates) while `media` means exactly one of them is ever fetched. */}
+        {/* `priority` does nothing through getImageProps — the real <Image> issues
+            its preload from inside the component, and the returned props carry
+            `fetchPriority: undefined`. Left alone, the hero (the LCP element on
+            every page view) would drop from a preloaded high-priority fetch to a
+            default-priority one discovered only when the parser reaches it. These
+            two links restore it, `media`-scoped so a phone still preloads exactly
+            one plate. React hoists them into <head>. */}
+        <link
+          rel="preload"
+          as="image"
+          media="(min-width: 768px)"
+          imageSrcSet={heroDesktop.srcSet}
+          imageSizes="100vw"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          media="(max-width: 767px)"
+          imageSrcSet={heroMobile.srcSet}
+          imageSizes="100vw"
+          fetchPriority="high"
+        />
         <div className="absolute inset-0 -z-10">
-          <Image
-            src="/images/hero-gym-room.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[72%_center] md:object-center"
-          />
+          <picture>
+            <source media="(min-width: 768px)" srcSet={heroDesktop.srcSet} sizes="100vw" />
+            <img
+              {...heroMobile}
+              alt=""
+              fetchPriority="high"
+              className="object-cover object-[72%_center] md:object-center"
+            />
+          </picture>
           {/* This source is shot to the spec in docs/HERO-BRIEF.md: its copy zone
               (left 62%) averages 20/255 against a budget of 68, so the heavy
               scrim the previous image needed is gone entirely. What is left is a
