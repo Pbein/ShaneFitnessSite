@@ -19,3 +19,19 @@ export function imageUrl(source?: SanityImageSource | null): string {
     return "";
   }
 }
+
+/**
+ * Resolve a Sanity image to a 1200x630 JPEG — the size every social network
+ * wants for a link preview. Cropped rather than letterboxed (hotspot-aware, so
+ * the focal point set in the CMS survives the crop), and forced to JPEG because
+ * some scrapers still refuse WebP, which `auto=format` would otherwise serve.
+ * Returns "" when there is no image, so callers can fall back to the shipped file.
+ */
+export function shareImageUrl(source?: SanityImageSource | null): string {
+  if (!source) return "";
+  try {
+    return urlFor(source).width(1200).height(630).fit("crop").format("jpg").quality(85).url();
+  } catch {
+    return "";
+  }
+}

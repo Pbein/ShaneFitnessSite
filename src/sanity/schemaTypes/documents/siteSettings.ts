@@ -108,6 +108,34 @@ export const siteSettings = defineType({
       fields: [
         defineField({ name: "title", title: "Default title", type: "string" }),
         defineField({ name: "description", title: "Default description", type: "text", rows: 3 }),
+        defineField({
+          name: "shareImage",
+          title: "Share image (link preview)",
+          type: "image",
+          options: { hotspot: true },
+          description:
+            "The picture that shows up when your site gets shared — texted to a friend, " +
+            "posted on Facebook or Instagram, or linked in an ad. Upload a wide image, " +
+            "ideally 1200 x 630 pixels; anything wider or taller gets cropped to that " +
+            "shape, and you can drag the hotspot to choose what stays in frame. " +
+            "Leave this empty and the site uses the Train Shane card it ships with. " +
+            "Note: Facebook and LinkedIn remember the old picture for a while — after " +
+            "changing it, paste your site's address into Facebook's Sharing Debugger " +
+            "and click \"Scrape Again\" to make them pick up the new one.",
+          validation: (r) =>
+            r.custom((value?: { asset?: { _ref?: string } }) => {
+              // Sanity encodes the dimensions in the asset id, so this reads the
+              // real size without fetching the file: image-<hash>-1200x630-jpg.
+              const dims = value?.asset?._ref?.match(/-(\d+)x(\d+)-/);
+              if (!dims) return true;
+              const ratio = Number(dims[1]) / Number(dims[2]);
+              if (Number(dims[1]) < 600)
+                return "This image is quite small and will look blurry in a link preview — 1200 pixels wide or more is best.";
+              if (ratio < 1.5 || ratio > 2.3)
+                return "This is not a wide image, so it will be cropped hard in link previews. A roughly 1200 x 630 picture works best.";
+              return true;
+            }).warning(),
+        }),
       ],
     }),
     defineField({

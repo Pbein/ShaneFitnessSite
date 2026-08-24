@@ -60,7 +60,12 @@ export interface SiteSettings {
   /** Stripe Customer Portal login link — lets clients self-cancel without an account. */
   manageSubscriptionUrl?: string;
   logo: string;
-  seo: { title: string; description: string };
+  seo: {
+    title: string;
+    description: string;
+    /** 1200x630 link-preview card. Empty = fall back to /images/og-card.jpg. */
+    shareImage?: string;
+  };
 }
 
 export const siteSettings: SiteSettings = {

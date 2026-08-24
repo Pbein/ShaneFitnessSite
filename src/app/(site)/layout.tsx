@@ -28,7 +28,18 @@ export async function generateMetadata(): Promise<Metadata> {
   // Purpose-built 1200x630 share card. The old value was the 2500x1667 hero
   // photo at 514KB — the wrong aspect ratio for every social preview, so it got
   // cropped unpredictably, and heavy for something fetched by a scraper.
-  const ogImage = { url: "/images/og-card.jpg", width: 1200, height: 630 };
+  //
+  // Shane can swap it from the CMS (Site Settings → SEO defaults → Share image),
+  // which Sanity serves already cropped to 1200x630. The `?v=` on the shipped
+  // fallback is a cache-buster: scrapers key their copy off the URL, so without
+  // it Facebook and LinkedIn would keep serving the previous card indefinitely.
+  // Bump it whenever public/images/og-card.jpg is replaced.
+  const ogImage = {
+    url: settings.seo.shareImage || "/images/og-card.jpg?v=2",
+    width: 1200,
+    height: 630,
+    alt: settings.seo.title,
+  };
   return {
     metadataBase: new URL(SITE_URL),
     title: {

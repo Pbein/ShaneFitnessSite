@@ -15,7 +15,7 @@ import type {
 } from "@/content/site";
 
 import { client } from "./client";
-import { imageUrl } from "./image";
+import { imageUrl, shareImageUrl } from "./image";
 import {
   siteSettingsQuery,
   homepageQuery,
@@ -74,7 +74,11 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     paymentLinks: (r.paymentLinks ?? []).map((p) => ({ label: p.label, url: p.url })),
     manageSubscriptionUrl: r.manageSubscriptionUrl,
     logo: imageUrl(r.logo),
-    seo: { title: r.seo?.title ?? "", description: r.seo?.description ?? "" },
+    seo: {
+      title: r.seo?.title ?? "",
+      description: r.seo?.description ?? "",
+      shareImage: shareImageUrl(r.seo?.shareImage) || undefined,
+    },
     googleAds: r.googleAds
       ? {
           conversionId: t(r.googleAds.conversionId),
@@ -214,7 +218,7 @@ type RawSiteSettings = {
   paymentLinks?: { label: string; url: string }[];
   manageSubscriptionUrl?: string;
   logo?: SanityImageSource;
-  seo?: { title?: string; description?: string };
+  seo?: { title?: string; description?: string; shareImage?: SanityImageSource };
   googleAds?: { conversionId?: string; contactLabel?: string; purchaseLabel?: string };
 };
 
