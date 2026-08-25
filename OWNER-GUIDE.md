@@ -41,7 +41,7 @@ Everything else — text, prices, photos — you can change yourself, right now,
 ### Editing text or a price
 1. Click the page or item you want (e.g. **Services → Virtual Coaching**).
 2. Click into the field — change the **price** from `$200` to whatever you want, or edit the description.
-3. Click **Publish** (bottom/right). Your live site updates within a minute.
+3. Click **Publish** (bottom/right). Your live site updates within a few seconds — refresh the page if you still see the old version.
 
 ### Swapping a photo
 1. Open the item (e.g. **About Page**).
@@ -56,7 +56,7 @@ Everything else — text, prices, photos — you can change yourself, right now,
    dropdown in the editor. It makes the article easier to read and easier to find.
 4. Turn on **Published** — this is the switch that puts it on the website, and it's a
    *different thing* from the blue **Publish** button, which only saves your work.
-5. Click **Publish**. It's live within a minute at
+5. Click **Publish**. It's live within a few seconds at
    `trainshane.com/resources/your-title`.
 
 > The **Getting found (SEO)** tab on each article is optional — leave it empty and the
