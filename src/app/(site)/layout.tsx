@@ -80,7 +80,19 @@ export default async function SiteLayout({
   if (!settings) throw new Error("Missing siteSettings document in the CMS");
 
   return (
-    <div className={`${oswald.variable} ${inter.variable} min-h-screen flex flex-col`}>
+    // `font-sans` belongs HERE, not only on <body>. The two font variables are
+    // defined on this div, and `font-sans` resolves to `var(--font-inter)`. On
+    // <body> that variable is out of scope, and a var() that references an
+    // undefined custom property invalidates the whole declaration at computed-
+    // value time — the `system-ui, sans-serif` fallbacks in tailwind.config never
+    // get a chance, so font-family fell all the way back to the browser default.
+    // Every element inheriting its font from <body> was therefore rendering in
+    // Times New Roman on the live site: the privacy and terms pages entirely, and
+    // any body copy without an explicit font class. Declaring it inside the scope
+    // that owns the variable fixes the whole site at once.
+    <div
+      className={`${oswald.variable} ${inter.variable} font-sans min-h-screen flex flex-col`}
+    >
       <CtaSettingsProvider
         value={{
           bookingUrl: settings.bookingUrl,

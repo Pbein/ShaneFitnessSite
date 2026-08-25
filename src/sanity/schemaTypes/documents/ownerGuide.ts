@@ -37,6 +37,7 @@ export const ownerGuide = defineType({
           { title: "Insurance & safety", value: "insurance" },
           { title: "Getting your first clients", value: "getting-clients" },
           { title: "Money, pricing & tax", value: "money" },
+          { title: "Getting found online (SEO)", value: "seo" },
         ],
         layout: "dropdown",
       },
@@ -122,6 +123,7 @@ export const ownerGuide = defineType({
         insurance: "Insurance & safety",
         "getting-clients": "Getting clients",
         money: "Money & pricing",
+        seo: "Getting found (SEO)",
       };
       return { title, subtitle: `${labels[category] ?? category}  ·  #${order ?? "—"}` };
     },

@@ -103,6 +103,7 @@ export const structure: StructureResolver = (S) =>
                   ["insurance", "Insurance & safety"],
                   ["getting-clients", "Getting your first clients"],
                   ["money", "Money, pricing & tax"],
+                  ["seo", "Getting found online (SEO)"],
                 ] as const
               ).map(([value, title]) =>
                 S.listItem()
@@ -156,6 +157,43 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
+      // Articles split by whether they are actually on the live site. The
+      // `published` field is a different thing from Sanity's Publish button, and
+      // one flat list gave Shane no way to see which of the two he had done —
+      // "🟢 Live" vs "⚪ Draft" in the preview subtitle answers it per document,
+      // these two lists answer it at a glance.
+      S.listItem()
+        .title("✍️ Articles")
+        .child(
+          S.list()
+            .title("Articles")
+            .items([
+              S.listItem()
+                .title("🟢 On the website")
+                .child(
+                  S.documentList()
+                    .title("Live articles")
+                    .filter('_type == "post" && published == true')
+                    .defaultOrdering([{ field: "publishedAt", direction: "desc" }]),
+                ),
+              S.listItem()
+                .title("⚪ Drafts — not on the website yet")
+                .child(
+                  S.documentList()
+                    .title("Drafts")
+                    .filter('_type == "post" && published != true')
+                    .defaultOrdering([{ field: "publishedAt", direction: "desc" }]),
+                ),
+              S.divider(),
+              S.listItem()
+                .title("All articles")
+                .child(
+                  S.documentTypeList("post")
+                    .title("All articles")
+                    .defaultOrdering([{ field: "publishedAt", direction: "desc" }]),
+                ),
+            ]),
+        ),
       S.documentTypeListItem("testimonial").title("Testimonials"),
-      S.documentTypeListItem("resource").title("Resources"),
+      S.documentTypeListItem("resource").title("Resources (links out)"),
     ]);

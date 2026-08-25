@@ -7,6 +7,8 @@ import type {
   Service,
   Testimonial,
   Resource,
+  Post,
+  PostSummary,
   Credential,
   Interest,
   Cta,
@@ -24,6 +26,9 @@ import {
   serviceBySlugQuery,
   testimonialsQuery,
   resourcesQuery,
+  postsQuery,
+  postBySlugQuery,
+  postSlugsQuery,
   navVisibilityQuery,
 } from "./queries";
 
@@ -187,6 +192,57 @@ export async function getResources(): Promise<Resource[]> {
   }));
 }
 
+/**
+ * Words per minute for the reading estimate. 200 is the conventional figure for
+ * adult reading of general prose; the number is only ever shown rounded to a
+ * whole minute, so precision here buys nothing.
+ */
+const WPM = 200;
+
+const readingMinutes = (words?: number) => Math.max(1, Math.round((words ?? 0) / WPM));
+
+export async function getPosts(): Promise<PostSummary[]> {
+  const r = await client.fetch<RawPost[]>(postsQuery, {}, fetchOpts);
+  return (r ?? []).map((p) => ({
+    title: t(p.title) ?? "",
+    slug: p.slug,
+    excerpt: t(p.excerpt) ?? "",
+    category: t(p.category) ?? "",
+    publishedAt: p.publishedAt,
+    readingMinutes: readingMinutes(p.words),
+  }));
+}
+
+export async function getPost(slug: string): Promise<Post | undefined> {
+  const p = await client.fetch<RawPost | null>(postBySlugQuery, { slug }, fetchOpts);
+  if (!p) return undefined;
+  return {
+    title: t(p.title) ?? "",
+    slug: p.slug,
+    excerpt: t(p.excerpt) ?? "",
+    category: t(p.category) ?? "",
+    publishedAt: p.publishedAt,
+    readingMinutes: readingMinutes(p.words),
+    body: p.body ?? [],
+    seoTitle: t(p.seoTitle),
+    seoDescription: t(p.seoDescription),
+    shareImage: shareImageUrl(p.shareImage) || undefined,
+    updatedAt: p.updatedAt ?? p.publishedAt,
+  };
+}
+
+/** Slug + timestamps only — for generateStaticParams and the sitemap. */
+export async function getPostSlugs(): Promise<
+  { slug: string; updatedAt: string; publishedAt: string }[]
+> {
+  const r = await client.fetch<{ slug: string; updatedAt: string; publishedAt: string }[]>(
+    postSlugsQuery,
+    {},
+    fetchOpts,
+  );
+  return r ?? [];
+}
+
 export async function getNavVisibility(): Promise<NavVisibility> {
   const r = await client.fetch<{ testimonials: number; resources: number } | null>(
     navVisibilityQuery,
@@ -267,4 +323,17 @@ type RawService = {
 };
 
 type RawTestimonial = { quote: string; author: string; role?: string };
+type RawPost = {
+  title: string;
+  slug: string;
+  excerpt?: string;
+  category?: string;
+  publishedAt: string;
+  words?: number;
+  body?: unknown[];
+  seoTitle?: string;
+  seoDescription?: string;
+  shareImage?: SanityImageSource;
+  updatedAt?: string;
+};
 type RawResource = { title: string; summary?: string; category?: string; url?: string };

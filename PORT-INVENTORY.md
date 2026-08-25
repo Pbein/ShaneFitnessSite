@@ -77,9 +77,15 @@ needs the same escape hatch for any admin-style surface.
 canonical test: `["", "/about", "/services", "/success-stories", "/resources", "/contact"]`.
 `/welcome` and `/studio` are deliberately excluded.
 
-There are **no dynamic content routes** — no `/services/[slug]`, no article pages. A
-`getService(slug)` fetcher and a `serviceBySlugQuery` exist but nothing calls them; they
-are the seam a future per-service detail page would use.
+There is **one dynamic content route**: `/resources/[slug]`, the article pages, added
+2026-08-24. It is prerendered per published `post` via `generateStaticParams`, with
+`dynamicParams` left at its default so an article published after a deploy renders on
+first request. Its sitemap entries are appended in `sitemap.ts` rather than living in
+`PUBLIC_ROUTES`.
+
+There is still no `/services/[slug]`. A `getService(slug)` fetcher and a
+`serviceBySlugQuery` exist but nothing calls them; they are the seam a future
+per-service detail page would use.
 
 ---
 
@@ -285,10 +291,12 @@ page component today and would need to become either block config or new CMS fie
 ### 5.6 Resources (`/resources`)
 
 1. **Page header band** — static `SectionHeading` ("Resources" / "Cut through the noise").
-2. **Resource cards** — 3-up `<article>` cards: `category` as a brand-red eyebrow,
-   `title`, `summary`, and a non-interactive "Coming soon" affordance with an arrow that
-   nudges on hover. **The card is not a link — there is no article route or body field.**
-3. **Placeholder notice** — dashed-border note that these are demo articles.
+2. **Article cards** — 3-up `<article>` cards wrapped in a whole-card `<Link>` to
+   `/resources/<slug>`: `category` as a brand-red eyebrow, `title`, `excerpt`, date and
+   reading estimate. Rendered from published `post` documents.
+3. **"Elsewhere" band** — the older link-out `resource` cards, shown below the articles
+   and only when any are published. These still have no body and no route; without a
+   `url` the card reads "Coming soon".
 4. **CTA band** — "Want guidance tailored to you?" plus a `booking` CTA.
 
 ### 5.7 Contact (`/contact`)

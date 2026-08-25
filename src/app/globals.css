@@ -78,6 +78,53 @@
   .legal-prose strong {
     @apply font-semibold text-cream-100;
   }
+
+  /* Articles. Same idea as .legal-prose but tuned for something people read for
+     pleasure rather than compliance: a larger body size, a wider line height and
+     a narrower measure (~68 characters), which is the range long-form prose is
+     comfortable at. Shane writes in the CMS and the CMS emits bare tags, so all
+     of the typography lives here — an article cannot bring its own spacing. */
+  .article-prose {
+    @apply max-w-[68ch] text-cream-300;
+  }
+  .article-prose p {
+    @apply mb-6 text-[17px] leading-[1.75] md:text-lg;
+  }
+  .article-prose h2 {
+    @apply mb-4 mt-14 text-2xl leading-snug text-cream-100 md:text-3xl;
+  }
+  .article-prose h3 {
+    @apply mb-3 mt-10 font-display text-sm uppercase tracking-wider2 text-brand;
+  }
+  .article-prose h2:first-child,
+  .article-prose h3:first-child {
+    @apply mt-0;
+  }
+  .article-prose ul,
+  .article-prose ol {
+    @apply mb-6 space-y-3 pl-6;
+  }
+  .article-prose li {
+    @apply text-[17px] leading-[1.7] marker:text-brand md:text-lg;
+  }
+  .article-prose ul li {
+    @apply list-disc;
+  }
+  .article-prose ol li {
+    @apply list-decimal;
+  }
+  .article-prose blockquote {
+    @apply my-8 border-l-2 border-brand pl-6 text-lg italic leading-relaxed text-cream-100 md:text-xl;
+  }
+  .article-prose a {
+    @apply text-cream-100 underline decoration-brand/60 underline-offset-2 transition-colors hover:text-brand;
+  }
+  .article-prose strong {
+    @apply font-semibold text-cream-100;
+  }
+  .article-prose em {
+    @apply italic;
+  }
 }
 
 /* Reveal-on-scroll utility (driven by Reveal component).

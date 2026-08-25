@@ -25,7 +25,7 @@ Your website is **live on the internet**, and so is your **editor** — the simp
 A few links are still **placeholders** until we set up your accounts together in one short session:
 - **"Book" buttons** point to a sample calendar until we connect your real Calendly.
 - **"Pay / Start Coaching" buttons** point to a sample checkout until we connect your real Stripe.
-- **Success Stories** and **Resources** show samples until we add your real ones.
+- **Success Stories** shows samples until we add your real ones.
 
 Everything else — text, prices, photos — you can change yourself, right now, using the editor below.
 
@@ -36,7 +36,7 @@ Everything else — text, prices, photos — you can change yourself, right now,
 ### Logging in
 - Go to **`shane-fitness-site.vercel.app/studio`** (this becomes **your-domain.com/studio** once your custom domain is connected).
 - Sign in with the **Google account** I invite you with (you'll get an email invitation — accept it once, and you're in).
-- You'll see a list in the sidebar: **Site Settings, Homepage, About Page, Services, Testimonials, Resources.**
+- You'll see a list in the sidebar: **To-Do List, Guides & Answers, Site Settings, Homepage, About Page, Services, Articles, Testimonials, Resources.**
 
 ### Editing text or a price
 1. Click the page or item you want (e.g. **Services → Virtual Coaching**).
@@ -47,6 +47,21 @@ Everything else — text, prices, photos — you can change yourself, right now,
 1. Open the item (e.g. **About Page**).
 2. Click the current image, choose **Upload**, pick the new photo from your computer.
 3. **Publish**. (Tip: use a clear, well-lit photo. The site automatically resizes it.)
+
+### Writing an article
+1. Go to **✍️ Articles → All articles**, then the **+** to start a new one.
+2. Fill in the **Title**, click **Generate** next to the web address, write a one- or
+   two-sentence **Summary**, pick a **Category** and a **Date**, then write.
+3. Break it up with **Section heading (H2)** every few paragraphs — that's the style
+   dropdown in the editor. It makes the article easier to read and easier to find.
+4. Turn on **Published** — this is the switch that puts it on the website, and it's a
+   *different thing* from the blue **Publish** button, which only saves your work.
+5. Click **Publish**. It's live within a minute at
+   `trainshane.com/resources/your-title`.
+
+> The **Getting found (SEO)** tab on each article is optional — leave it empty and the
+> site uses your title and summary, which is usually the right answer. For what to write
+> about and how often, read **📖 Guides & Answers → Getting found online (SEO)**.
 
 ### Changing your booking link
 1. Go to **Site Settings → Booking URL**.

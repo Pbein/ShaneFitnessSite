@@ -369,6 +369,37 @@ export interface Resource {
   url?: string;
 }
 
+/* ------------------------------------------------------------------ */
+/* Articles                                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * An article Shane wrote, as the Resources index needs it — everything required
+ * to render a card and a link, and nothing else. The body is fetched only on the
+ * article's own page.
+ */
+export interface PostSummary {
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  /** ISO 8601, from the CMS. */
+  publishedAt: string;
+  /** Rounded up, minimum 1. Derived from the body word count, never stored. */
+  readingMinutes: number;
+}
+
+/** A full article. `body` stays as Portable Text for ArticleBody to render. */
+export interface Post extends PostSummary {
+  body: unknown[];
+  /** Optional CMS overrides; the page falls back to `title` / `excerpt`. */
+  seoTitle?: string;
+  seoDescription?: string;
+  shareImage?: string;
+  /** Document mtime — feeds `dateModified` and the sitemap's lastmod. */
+  updatedAt: string;
+}
+
 export const resources: Resource[] = [
   {
     title: "Why sustainable beats extreme — every time",
