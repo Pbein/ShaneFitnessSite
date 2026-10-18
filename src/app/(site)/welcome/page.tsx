@@ -36,11 +36,12 @@ export default async function WelcomePage({
     siteSettings.googleAds?.purchaseLabel,
   );
   // Known gap, written down rather than discovered: /welcome is reachable by
-  // anyone who types the URL, so Purchase can fire without a payment. Both ad
-  // platforms only credit conversions to a prior ad click, so the practical
-  // impact is small. `session_id` is present only if the Stripe Payment Link's
-  // redirect appends `&session_id={CHECKOUT_SESSION_ID}`; it is the id a future
-  // Reddit CAPI call (or a server-side Stripe check) would key on.
+  // anyone who types the URL, so Purchase can fire without a payment. Ad
+  // platforms only credit a conversion they can tie to someone who clicked or
+  // (Reddit) viewed an ad, so the practical impact is small but not zero.
+  // `session_id` comes from the Stripe Payment Links' redirect, which appends
+  // `&session_id={CHECKOUT_SESSION_ID}` (since 2026-10-17); it is the id a
+  // future Reddit CAPI call (or a server-side Stripe check) would key on.
   const purchaseValue = plan ? PLAN_VALUE_USD[plan] : undefined;
   const session_id =
     typeof sessionId === "string" && /^cs_[A-Za-z0-9_]{10,200}$/.test(sessionId)

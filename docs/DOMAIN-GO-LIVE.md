@@ -292,6 +292,15 @@ in `src/lib/welcome.ts`. A typo there fails **silently** — the visitor still g
 a 200 and plausible copy, but is offered the free-consultation Calendly instead
 of the event type they just paid for.
 
+**Updated 2026-10-17:** all three redirects now also end in
+`&session_id={CHECKOUT_SESSION_ID}`, e.g.
+`https://trainshane.com/welcome?plan=premium&session_id={CHECKOUT_SESSION_ID}`.
+Stripe fills in the real Checkout Session id, and `/welcome` sends it to Reddit
+as the Purchase `conversionId` (the dedup key a future Reddit CAPI call would
+share). Type the placeholder exactly — braces and capitals — or Stripe passes
+it through literally; the page ignores anything that is not a `cs_…` id, so a
+typo loses the id but breaks nothing.
+
 While you are in Stripe:
 
 - **Settings → Billing → Customer portal → return URL** → `https://trainshane.com`
