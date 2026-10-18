@@ -201,6 +201,36 @@ export const siteSettings = defineType({
         }),
       ],
     }),
+    defineField({
+      name: "redditAds",
+      title: "Reddit Ads conversion tracking",
+      type: "object",
+      description:
+        "Tells Reddit Ads when an ad click actually turned into an inquiry or a sale. " +
+        "Until the Pixel ID below is filled in, no Reddit tracking code loads on the " +
+        "site at all. Changes go live within about a minute — no rebuild needed.",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({
+          name: "pixelId",
+          title: "Pixel ID",
+          type: "string",
+          description:
+            "Starts with a2_ followed by letters and numbers, e.g. a2_abc123def45. Find it " +
+            "in Reddit Ads Manager under Events Manager — it is the \"unique Pixel ID\" " +
+            "with a Copy to Clipboard button. Paste only the ID, not any code. Once set, " +
+            "the site reports a page visit on every page, a Lead when someone sends the " +
+            "contact form, and a Purchase when someone lands on the welcome page after " +
+            "paying. You do not need Reddit's \"Conversions API\" or the code snippet " +
+            "Reddit offers — this field replaces both.",
+          validation: (r) =>
+            r.regex(/^(a2|t2)_[A-Za-z0-9]{5,20}$/, { name: "Reddit Pixel ID" }).warning(
+              "This should look like a2_abc123def45. If it does not match, the site will " +
+                "ignore it and no tracking will run — better than loading a broken pixel.",
+            ),
+        }),
+      ],
+    }),
   ],
   preview: { select: { title: "businessName", subtitle: "tagline" } },
 });

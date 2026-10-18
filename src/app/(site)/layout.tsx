@@ -8,6 +8,7 @@ import { CtaSettingsProvider } from "@/components/CtaSettingsProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GoogleAdsTag } from "@/components/GoogleAdsTag";
+import { RedditPixelTag } from "@/components/RedditPixelTag";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -114,6 +115,8 @@ export default async function SiteLayout({
           about a minute — no rebuild, unlike a NEXT_PUBLIC_ env var, which
           would be baked in at build time and need a redeploy. */}
       <GoogleAdsTag conversionId={settings.googleAds?.conversionId} />
+      {/* Same deal: nothing until a Reddit Pixel ID is set in Site Settings. */}
+      <RedditPixelTag pixelId={settings.redditAds?.pixelId} />
     </div>
   );
 }

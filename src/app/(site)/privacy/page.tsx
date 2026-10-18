@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 /** Bump when the policy text changes. */
-const LAST_UPDATED = "21 August 2026";
+const LAST_UPDATED = "17 October 2026";
 
 export default async function PrivacyPage() {
   const siteSettings = await getSiteSettings();
@@ -109,6 +109,23 @@ export default async function PrivacyPage() {
                 , or use a browser or extension that blocks it — the site works
                 exactly the same either way, and blocking it costs you nothing.
               </p>
+              <h3>Reddit Ads</h3>
+              <p>
+                I may also advertise on Reddit. When I do, the site loads the Reddit
+                Pixel, which works the same way: it sets cookies so Reddit can tell
+                that someone who clicked an ad later sent the contact form or
+                completed a purchase. I do not send Reddit your name, email, or the
+                contents of your message. You can{" "}
+                <a
+                  href="https://www.reddit.com/settings/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  limit ad personalisation in your Reddit settings
+                </a>
+                , or block it in your browser — again, nothing on the site depends
+                on it.
+              </p>
 
               <h2>Third parties, and one you should know about</h2>
               <p>
@@ -116,7 +133,7 @@ export default async function PrivacyPage() {
                 Sanity (the content system — it stores the site&apos;s words and
                 images, no visitor data), Stripe (payments), Calendly (scheduling),
                 Resend (which delivers the contact form to my inbox), and Google
-                (advertising measurement).
+                and Reddit (advertising measurement).
               </p>
               <p>
                 One thing worth being upfront about: <strong>the embedded Calendly

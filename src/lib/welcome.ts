@@ -26,6 +26,18 @@ export const PLAN_COPY: Record<
   },
 };
 
+/**
+ * What each plan's first payment is worth, in dollars — reported to Reddit as
+ * the Purchase value so it can tell a $349 client from a $100 one. Stripe is
+ * the source of truth for prices; update this if a Payment Link's price
+ * changes. Unknown plans report no value rather than a guess.
+ */
+export const PLAN_VALUE_USD: Record<string, number> = {
+  essential: 199,
+  premium: 349,
+  "in-person": 100,
+};
+
 export const DEFAULT_COPY = {
   heading: "Payment received — let's get started",
   intro:

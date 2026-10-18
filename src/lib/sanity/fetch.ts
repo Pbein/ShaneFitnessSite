@@ -91,6 +91,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
           purchaseLabel: t(r.googleAds.purchaseLabel),
         }
       : undefined,
+    redditAds: r.redditAds ? { pixelId: t(r.redditAds.pixelId) } : undefined,
   };
 }
 
@@ -276,6 +277,7 @@ type RawSiteSettings = {
   logo?: SanityImageSource;
   seo?: { title?: string; description?: string; shareImage?: SanityImageSource };
   googleAds?: { conversionId?: string; contactLabel?: string; purchaseLabel?: string };
+  redditAds?: { pixelId?: string };
 };
 
 type RawHomepage = {

@@ -47,6 +47,8 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   /** Google Ads conversion tracking, set in the CMS. Absent = no tracking loads. */
   googleAds?: GoogleAdsSettings;
+  /** Reddit Pixel, set in the CMS. Absent = no Reddit tracking loads. */
+  redditAds?: { pixelId?: string };
   /** Calendly / Google scheduling URL — STUB. */
   bookingUrl: string;
   /** Calendly "first session" (monthly, Meet) booked on /welcome for the Essential tier. */

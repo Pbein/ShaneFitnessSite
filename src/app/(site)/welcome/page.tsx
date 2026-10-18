@@ -4,7 +4,7 @@ import { getSiteSettings } from "@/lib/sanity/fetch";
 import { Reveal } from "@/components/Reveal";
 import { CalendlyInline } from "@/components/CalendlyInline";
 import { isEmbeddableCalendly } from "@/lib/booking";
-import { resolveWelcome } from "@/lib/welcome";
+import { resolveWelcome, PLAN_VALUE_USD } from "@/lib/welcome";
 import { CheckIcon } from "@/components/Icons";
 import { ConversionOnMount } from "@/components/ConversionOnMount";
 import { conversionSendTo } from "@/lib/analytics";
@@ -19,9 +19,9 @@ export const metadata: Metadata = {
 export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; session_id?: string }>;
 }) {
-  const [{ plan }, siteSettings] = await Promise.all([searchParams, getSiteSettings()]);
+  const [{ plan, session_id: sessionId }, siteSettings] = await Promise.all([searchParams, getSiteSettings()]);
   if (!siteSettings) {
     throw new Error("Missing siteSettings document in the CMS");
   }
@@ -35,10 +35,25 @@ export default async function WelcomePage({
     siteSettings.googleAds?.conversionId,
     siteSettings.googleAds?.purchaseLabel,
   );
+  // Known gap, written down rather than discovered: /welcome is reachable by
+  // anyone who types the URL, so Purchase can fire without a payment. Both ad
+  // platforms only credit conversions to a prior ad click, so the practical
+  // impact is small. `session_id` is present only if the Stripe Payment Link's
+  // redirect appends `&session_id={CHECKOUT_SESSION_ID}`; it is the id a future
+  // Reddit CAPI call (or a server-side Stripe check) would key on.
+  const purchaseValue = plan ? PLAN_VALUE_USD[plan] : undefined;
+  const session_id =
+    typeof sessionId === "string" && /^cs_[A-Za-z0-9_]{10,200}$/.test(sessionId)
+      ? sessionId
+      : undefined;
 
   return (
     <section className="section pt-32">
-      <ConversionOnMount sendTo={purchaseSendTo} dedupeKey={`purchase:${plan ?? "unknown"}`} />
+      <ConversionOnMount
+        sendTo={purchaseSendTo}
+        reddit={{ event: "Purchase", value: purchaseValue, conversionId: session_id }}
+        dedupeKey={`purchase:${plan ?? "unknown"}`}
+      />
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/15 text-brand">

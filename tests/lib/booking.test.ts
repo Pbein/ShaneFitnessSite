@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isEmbeddableCalendly } from "@/lib/booking";
+import { isEmbeddableCalendly, calendlyScheduledId } from "@/lib/booking";
 
 describe("isEmbeddableCalendly", () => {
   it("is true for a real calendly.com scheduling link", () => {
@@ -43,5 +43,46 @@ describe("isEmbeddableCalendly", () => {
   it("is false for a malformed / non-URL string", () => {
     expect(isEmbeddableCalendly("not a url")).toBe(false);
     expect(isEmbeddableCalendly("calendly.com/shane")).toBe(false);
+  });
+});
+
+describe("calendlyScheduledId", () => {
+  const msg = {
+    event: "calendly.event_scheduled",
+    payload: {
+      event: { uri: "https://api.calendly.com/scheduled_events/E1" },
+      invitee: { uri: "https://api.calendly.com/scheduled_events/E1/invitees/I1" },
+    },
+  };
+
+  it("returns the invitee URI for a real booking", () => {
+    expect(calendlyScheduledId("https://calendly.com", msg)).toBe(
+      "https://api.calendly.com/scheduled_events/E1/invitees/I1",
+    );
+  });
+
+  it("ignores the same message from any other origin — it could be forged", () => {
+    expect(calendlyScheduledId("https://evil.example", msg)).toBeNull();
+    expect(calendlyScheduledId("https://calendly.com.evil.example", msg)).toBeNull();
+  });
+
+  it("ignores Calendly's other events", () => {
+    for (const event of [
+      "calendly.profile_page_viewed",
+      "calendly.event_type_viewed",
+      "calendly.date_and_time_selected",
+      "calendly.page_height",
+    ]) {
+      expect(calendlyScheduledId("https://calendly.com", { event })).toBeNull();
+    }
+  });
+
+  it("still counts a booking whose payload lacks an invitee URI", () => {
+    expect(calendlyScheduledId("https://calendly.com", { event: "calendly.event_scheduled" })).toBe("");
+  });
+
+  it("ignores non-object messages", () => {
+    expect(calendlyScheduledId("https://calendly.com", "calendly.event_scheduled")).toBeNull();
+    expect(calendlyScheduledId("https://calendly.com", null)).toBeNull();
   });
 });

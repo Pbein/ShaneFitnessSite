@@ -12,7 +12,8 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   manageSubscriptionUrl,
   logo,
   seo{ title, description, shareImage },
-  googleAds{ conversionId, contactLabel, purchaseLabel }
+  googleAds{ conversionId, contactLabel, purchaseLabel },
+  redditAds{ pixelId }
 }`;
 
 export const homepageQuery = groq`*[_type == "homepage"][0]{

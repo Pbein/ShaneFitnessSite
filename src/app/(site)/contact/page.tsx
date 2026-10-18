@@ -103,7 +103,7 @@ export default async function ContactPage() {
               align="center"
             />
             <div className="mt-10">
-              <CalendlyInline url={siteSettings.bookingUrl} />
+              <CalendlyInline url={siteSettings.bookingUrl} reportLead />
             </div>
           </div>
         </section>

@@ -6,6 +6,7 @@ import { track } from "@vercel/analytics";
 import { submitInquiry } from "@/app/(site)/contact/actions";
 import { LIMITS, EMPTY_STATE } from "@/lib/contact";
 import { reportConversion } from "@/lib/analytics";
+import { reportRedditEvent, newConversionId } from "@/lib/reddit";
 import { ArrowIcon, CheckIcon } from "./Icons";
 
 /**
@@ -44,6 +45,8 @@ export function ContactForm({
       // traffic that never becomes a client, which is the whole failure this
       // is meant to prevent.
       reportConversion(conversionSendTo ?? null);
+      // No-op unless Shane has set a Reddit Pixel ID.
+      reportRedditEvent("Lead", { conversionId: newConversionId() });
       formRef.current?.reset();
     }
     // Move focus to the error summary so a screen reader announces the failure
