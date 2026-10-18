@@ -111,11 +111,17 @@ export function newConversionId(): string | undefined {
  * No advanced matching (email/phone) is passed to `init`: the site has no
  * logged-in users, and sending visitor contact details to Reddit is not
  * something to do without a reason. `useDecimalCurrencyValues` makes `value`
- * mean dollars (199) rather than cents, matching Reddit's current snippet.
+ * mean dollars (199) rather than cents. pixel.js already defaults it to true
+ * when omitted (checked in the shipped bundle, 2026-10-17); it is explicit here
+ * so a change of default cannot silently turn $199 into $1.99.
+ *
+ * Note: Reddit's *auto*-advanced matching (scraping emails/phones off the page)
+ * is not controlled here. It is a toggle in Reddit Events Manager, delivered to
+ * pixel.js in the pixel's remote config, and it ignores what `init` says.
  */
 export function redditPixelInitScript(pixelId: string): string {
   return (
-    `!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js";t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);` +
+    `!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js?pixel_id=${pixelId}";t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);` +
     `rdt('init','${pixelId}',{optOut:false,useDecimalCurrencyValues:true});rdt('track','PageVisit');` +
     `(window.__rdtPending||[]).forEach(function(a){rdt.apply(null,a)});window.__rdtPending=[];`
   );
